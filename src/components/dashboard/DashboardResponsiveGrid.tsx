@@ -3,6 +3,7 @@
 import type { ComponentType, ReactNode } from "react";
 import type { Layout, Layouts } from "react-grid-layout";
 import * as ReactGridLayout from "react-grid-layout";
+import "react-grid-layout/css/styles.css";
 
 type ResponsiveComponent = ComponentType<{
   className?: string;

@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { X, MapPin, Droplets, Sprout, Calendar, ClipboardList } from "lucide-react";
 import { motion, AnimatePresence } from "@/lib/motion";
 import { useDataStore } from "@/store/dataStore";
@@ -19,9 +21,26 @@ export function FieldDetailDrawer() {
   const techMap = useDataStore((s) => s.techMap);
   const fieldOperations = useDataStore((s) => s.fieldOperations);
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!fieldDrawerOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [fieldDrawerOpen]);
+
   const field = fields.find((f) => f.id === selectedFieldId);
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {fieldDrawerOpen && field && (
         <>
@@ -29,40 +48,44 @@ export function FieldDetailDrawer() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm"
             onClick={closeFieldDrawer}
+            aria-hidden
           />
           <motion.aside
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
-            className="fixed bottom-0 right-0 top-0 z-50 flex w-full max-w-md flex-col border-l border-surface-border bg-surface-card shadow-2xl"
+            className="fixed bottom-0 right-0 top-0 z-[100] flex w-full max-w-md flex-col border-l border-surface-border bg-surface-elevated shadow-2xl"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Карточка поля ${field.name}`}
           >
-            <header className="flex items-center justify-between border-b border-surface-border px-5 py-4">
-              <div>
+            <header className="flex shrink-0 items-center justify-between border-b border-surface-border px-5 py-4">
+              <div className="min-w-0">
                 <p className="text-xs uppercase tracking-wide text-slate-500">
                   Карточка поля
                 </p>
-                <h2 className="text-lg font-bold text-white">{field.name}</h2>
+                <h2 className="truncate text-lg font-bold text-white">{field.name}</h2>
               </div>
               <button
                 type="button"
                 onClick={closeFieldDrawer}
-                className="rounded-lg border border-surface-border p-2 text-slate-400 hover:text-white"
+                className="shrink-0 rounded-lg border border-surface-border p-2 text-slate-400 hover:text-white"
                 aria-label="Закрыть"
               >
                 <X className="h-4 w-4" />
               </button>
             </header>
 
-            <div className="flex-1 overflow-y-auto p-5 space-y-5">
+            <div className="min-h-0 flex-1 space-y-5 overflow-y-auto p-5">
               <section className="rounded-xl border border-surface-border bg-surface-hover/40 p-4">
                 <div className="flex items-start gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/15">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/15">
                     <MapPin className="h-5 w-5 text-accent" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="font-medium text-white">
                       {field.crop} · {field.area} га
                     </p>
@@ -103,13 +126,13 @@ export function FieldDetailDrawer() {
                   ].map(({ icon: Icon, label, value }) => (
                     <div
                       key={label}
-                      className="rounded-lg border border-surface-border bg-surface-hover/30 px-3 py-2.5"
+                      className="min-w-0 rounded-lg border border-surface-border bg-surface-hover/30 px-3 py-2.5"
                     >
                       <div className="flex items-center gap-1.5 text-[10px] text-slate-500">
-                        <Icon className="h-3 w-3" />
-                        {label}
+                        <Icon className="h-3 w-3 shrink-0" />
+                        <span className="truncate">{label}</span>
                       </div>
-                      <p className="mt-1 text-sm font-semibold text-white">{value}</p>
+                      <p className="mt-1 truncate text-sm font-semibold text-white">{value}</p>
                     </div>
                   ))}
                 </div>
@@ -167,12 +190,12 @@ export function FieldDetailDrawer() {
                         className="rounded-lg border border-surface-border bg-surface-hover/30 px-3 py-2"
                       >
                         <div className="flex justify-between gap-2">
-                          <p className="text-xs font-medium text-white">
+                          <p className="min-w-0 truncate text-xs font-medium text-white">
                             {op.product}
                           </p>
-                          <span className="text-[10px] text-slate-500">{op.date}</span>
+                          <span className="shrink-0 text-[10px] text-slate-500">{op.date}</span>
                         </div>
-                        <p className="text-[11px] text-slate-400">
+                        <p className="truncate text-[11px] text-slate-400">
                           {op.amount} · {op.status}
                         </p>
                       </div>
@@ -184,6 +207,7 @@ export function FieldDetailDrawer() {
           </motion.aside>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

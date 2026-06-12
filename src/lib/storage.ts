@@ -3,7 +3,7 @@ import { createDefaultState, generateLayoutsForWidgets } from "@/config/defaultL
 
 const STORAGE_KEY = "agropulse-dashboard-config";
 /** Увеличивайте при смене дефолтной раскладки */
-const STORAGE_VERSION = 5;
+const STORAGE_VERSION = 6;
 
 interface StoredConfig extends DashboardPersistedState {
   version: number;

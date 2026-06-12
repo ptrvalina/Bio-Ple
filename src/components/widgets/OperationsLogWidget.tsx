@@ -16,10 +16,16 @@ export function OperationsLogWidget() {
   const selected = operations.find((o) => o.id === selectedOperationId);
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="max-h-[220px] overflow-y-auto rounded-xl border border-surface-border/60">
-        <table className="w-full text-left text-sm">
-          <thead className="sticky top-0 z-10 bg-surface-card">
+    <div className="flex h-full min-h-0 flex-col gap-3">
+      <div className="min-h-0 flex-1 overflow-auto rounded-xl border border-surface-border/60">
+        <table className="w-full table-fixed text-left text-sm">
+          <colgroup>
+            <col className="w-[22%]" />
+            <col className="w-[18%]" />
+            <col className="w-[38%]" />
+            <col className="w-[22%]" />
+          </colgroup>
+          <thead className="sticky top-0 z-10 bg-surface-elevated">
             <tr className="text-[10px] uppercase tracking-wider text-slate-500">
               <th className="px-3 py-2.5 font-semibold">Дата</th>
               <th className="px-3 py-2.5 font-semibold">Поле</th>
@@ -40,14 +46,14 @@ export function OperationsLogWidget() {
                     : "hover:bg-surface-hover/50"
                 }`}
               >
-                <td className="px-3 py-2.5 font-mono text-xs text-slate-400">
+                <td className="truncate px-3 py-2.5 font-mono text-xs text-slate-400">
                   {row.date}
                 </td>
-                <td className="px-3 py-2.5 font-medium text-white">{row.field}</td>
-                <td className="px-3 py-2.5 text-slate-300">{row.product}</td>
+                <td className="truncate px-3 py-2.5 font-medium text-white">{row.field}</td>
+                <td className="truncate px-3 py-2.5 text-slate-300">{row.product}</td>
                 <td className="px-3 py-2.5">
                   <span
-                    className={`inline-flex rounded-full px-2.5 py-0.5 text-[10px] font-semibold ring-1 ring-inset ${STATUS_STYLES[row.status]}`}
+                    className={`inline-flex max-w-full truncate rounded-full px-2.5 py-0.5 text-[10px] font-semibold ring-1 ring-inset ${STATUS_STYLES[row.status]}`}
                   >
                     {row.status}
                   </span>

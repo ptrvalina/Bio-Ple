@@ -60,7 +60,7 @@ export function FieldAnalysisWidget() {
   const a = field.analysis;
 
   return (
-    <div className="flex h-full min-h-[200px] flex-col gap-3">
+    <div className="flex h-full min-h-0 flex-col gap-3 overflow-hidden">
       {/* Переключатель полей */}
       <div className="flex gap-1">
         {fields.map((f) => (

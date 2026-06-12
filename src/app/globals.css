@@ -212,8 +212,10 @@ body {
 
 .widget-content {
   flex: 1;
+  min-height: 0;
   overflow: auto;
   padding: 1rem;
+  -webkit-overflow-scrolling: touch;
 }
 
 .stat-value {
@@ -255,8 +257,14 @@ body {
 }
 
 .react-grid-item {
+  overflow: hidden;
   transition: all 200ms ease;
   transition-property: left, top, width, height;
+}
+
+.react-grid-item > * {
+  height: 100%;
+  min-height: 0;
 }
 
 .react-grid-item.cssTransforms {

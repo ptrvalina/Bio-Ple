@@ -55,7 +55,7 @@ export function ActivityTimelineWidget() {
   const activities = useDataStore((s) => s.activities);
 
   return (
-    <div className="max-h-[240px] divide-y divide-surface-border/50 overflow-y-auto">
+    <div className="h-full min-h-0 divide-y divide-surface-border/50 overflow-y-auto">
       {activities.length === 0 ? (
         <p className="py-8 text-center text-sm text-slate-500">
           События появятся после синхронизации

@@ -19,15 +19,15 @@ const COLORS = {
 function ForecastRow({ item }: { item: ForecastDay }) {
   const Icon = ICONS[item.icon];
   return (
-    <div className="flex items-center justify-between rounded-lg border border-surface-border bg-surface-hover/40 px-3 py-2.5">
-      <div className="flex items-center gap-3">
-        <Icon className={`h-5 w-5 ${COLORS[item.icon]}`} />
-        <div>
-          <p className="text-sm font-medium text-white">{item.day}</p>
-          <p className="text-xs text-slate-400">{item.condition}</p>
+    <div className="flex min-w-0 items-center justify-between gap-2 rounded-lg border border-surface-border bg-surface-hover/40 px-3 py-2.5">
+      <div className="flex min-w-0 items-center gap-3">
+        <Icon className={`h-5 w-5 shrink-0 ${COLORS[item.icon]}`} />
+        <div className="min-w-0">
+          <p className="truncate text-sm font-medium text-white">{item.day}</p>
+          <p className="truncate text-xs text-slate-400">{item.condition}</p>
         </div>
       </div>
-      <span className="text-sm font-semibold text-white">+{item.temp}°</span>
+      <span className="shrink-0 text-sm font-semibold text-white">+{item.temp}°</span>
     </div>
   );
 }
@@ -37,7 +37,7 @@ export function WeatherForecastWidget() {
   const forecast = useDataStore((s) => s.forecast);
 
   return (
-    <div className="flex h-full min-h-[120px] flex-col justify-center gap-2">
+    <div className="flex h-full min-h-0 flex-col justify-center gap-2 overflow-hidden">
       {forecast.map((item) => (
         <ForecastRow key={item.id} item={item} />
       ))}

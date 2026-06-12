@@ -70,7 +70,7 @@ function WidgetShellComponent({
         isRemoving ? { opacity: 0, scale: 0.9 } : { opacity: 1, scale: 1 }
       }
       transition={{ duration: 0.25, ease: "easeOut" }}
-      className="glass-panel pulse-accent flex h-full min-h-[140px] flex-col overflow-hidden"
+      className="glass-panel pulse-accent flex h-full min-h-0 flex-col overflow-hidden"
     >
       <div className="flex items-center justify-between border-b border-surface-border/80 px-4 py-2.5">
         <div
@@ -116,7 +116,7 @@ function WidgetShellComponent({
         )}
       </div>
 
-      <div className="widget-content">
+      <div className="widget-content min-h-0">
         <WidgetRenderer widget={widget} onRemove={onRemove} />
       </div>
     </motion.div>

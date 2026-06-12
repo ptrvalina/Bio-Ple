@@ -83,7 +83,7 @@ export function DashboardGrid({ mode }: DashboardGridProps) {
   const children = useMemo(
     () =>
       widgets.map((widget) => (
-        <div key={widget.id}>
+        <div key={widget.id} className="h-full min-h-0 overflow-hidden">
           <WidgetShell
             widget={widget}
             mode={mode}

@@ -25,13 +25,14 @@ export function AlertsWidget() {
   }
 
   return (
-    <div className="flex h-full min-h-[100px] flex-col gap-2">
-      <div className="mb-1 flex items-center gap-2">
-        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+    <div className="flex h-full min-h-0 flex-col gap-2 overflow-hidden">
+      <div className="mb-1 flex shrink-0 items-center gap-2">
+        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
           {alerts.length}
         </span>
-        <span className="text-xs text-slate-500">активных предупреждений</span>
+        <span className="truncate text-xs text-slate-500">активных предупреждений</span>
       </div>
+      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto">
       {alerts.map((alert) => (
         <div
           key={alert.id}
@@ -61,6 +62,7 @@ export function AlertsWidget() {
           </div>
         </div>
       ))}
+      </div>
     </div>
   );
 }

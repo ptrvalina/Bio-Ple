@@ -30,27 +30,27 @@ export function createDefaultState(): {
   });
 
   const lgLayout = [
-    { i: "default-field-map", x: 0, y: 0, w: 6, h: 4, minW: 2, maxW: 12, minH: 2 },
-    { i: "default-field-analysis", x: 6, y: 0, w: 3, h: 4, minW: 2, maxW: 12, minH: 2 },
+    { i: "default-field-map", x: 0, y: 0, w: 6, h: 4, minW: 2, maxW: 12, minH: 3 },
+    { i: "default-field-analysis", x: 6, y: 0, w: 3, h: 4, minW: 2, maxW: 12, minH: 3 },
     { i: "default-weather-now", x: 9, y: 0, w: 3, h: 2, minW: 2, maxW: 12, minH: 2 },
-    { i: "default-alerts", x: 9, y: 2, w: 3, h: 2, minW: 2, maxW: 12, minH: 2 },
-    { i: "default-operations-log", x: 0, y: 4, w: 6, h: 3, minW: 2, maxW: 12, minH: 2 },
-    { i: "default-tech-map", x: 6, y: 4, w: 3, h: 3, minW: 2, maxW: 12, minH: 2 },
-    { i: "default-plan-fact", x: 9, y: 4, w: 3, h: 3, minW: 2, maxW: 12, minH: 2 },
-    { i: "default-activity", x: 0, y: 7, w: 4, h: 2, minW: 2, maxW: 12, minH: 2 },
-    { i: "default-weather-forecast", x: 4, y: 7, w: 8, h: 2, minW: 2, maxW: 12, minH: 2 },
+    { i: "default-alerts", x: 9, y: 2, w: 3, h: 3, minW: 2, maxW: 12, minH: 2 },
+    { i: "default-operations-log", x: 0, y: 4, w: 6, h: 4, minW: 2, maxW: 12, minH: 3 },
+    { i: "default-tech-map", x: 6, y: 4, w: 3, h: 4, minW: 2, maxW: 12, minH: 3 },
+    { i: "default-plan-fact", x: 9, y: 4, w: 3, h: 4, minW: 2, maxW: 12, minH: 3 },
+    { i: "default-activity", x: 0, y: 8, w: 4, h: 3, minW: 2, maxW: 12, minH: 2 },
+    { i: "default-weather-forecast", x: 4, y: 8, w: 8, h: 3, minW: 2, maxW: 12, minH: 2 },
   ];
 
   const mdLayout = [
-    { i: "default-field-map", x: 0, y: 0, w: 6, h: 4, minW: 2, maxW: 6, minH: 2 },
-    { i: "default-field-analysis", x: 0, y: 4, w: 6, h: 3, minW: 2, maxW: 6, minH: 2 },
-    { i: "default-weather-now", x: 0, y: 7, w: 3, h: 2, minW: 2, maxW: 6, minH: 2 },
-    { i: "default-alerts", x: 3, y: 7, w: 3, h: 2, minW: 2, maxW: 6, minH: 2 },
-    { i: "default-operations-log", x: 0, y: 9, w: 6, h: 3, minW: 2, maxW: 6, minH: 2 },
-    { i: "default-tech-map", x: 0, y: 12, w: 6, h: 3, minW: 2, maxW: 6, minH: 2 },
-    { i: "default-plan-fact", x: 0, y: 15, w: 6, h: 3, minW: 2, maxW: 6, minH: 2 },
-    { i: "default-activity", x: 0, y: 18, w: 6, h: 2, minW: 2, maxW: 6, minH: 2 },
-    { i: "default-weather-forecast", x: 0, y: 20, w: 6, h: 2, minW: 2, maxW: 6, minH: 2 },
+    { i: "default-field-map", x: 0, y: 0, w: 6, h: 4, minW: 2, maxW: 6, minH: 3 },
+    { i: "default-field-analysis", x: 0, y: 4, w: 6, h: 4, minW: 2, maxW: 6, minH: 3 },
+    { i: "default-weather-now", x: 0, y: 8, w: 3, h: 2, minW: 2, maxW: 6, minH: 2 },
+    { i: "default-alerts", x: 3, y: 8, w: 3, h: 3, minW: 2, maxW: 6, minH: 2 },
+    { i: "default-operations-log", x: 0, y: 11, w: 6, h: 4, minW: 2, maxW: 6, minH: 3 },
+    { i: "default-tech-map", x: 0, y: 15, w: 6, h: 4, minW: 2, maxW: 6, minH: 3 },
+    { i: "default-plan-fact", x: 0, y: 19, w: 6, h: 3, minW: 2, maxW: 6, minH: 3 },
+    { i: "default-activity", x: 0, y: 22, w: 6, h: 3, minW: 2, maxW: 6, minH: 2 },
+    { i: "default-weather-forecast", x: 0, y: 25, w: 6, h: 3, minW: 2, maxW: 6, minH: 2 },
   ];
 
   const smLayout = widgets.map((w, index) => ({

@@ -8,7 +8,7 @@ export function TechMapWidget() {
   const onTrack = techMap.status === "on-track";
 
   return (
-    <div className="space-y-4">
+    <div className="h-full min-h-0 space-y-4 overflow-y-auto">
       <div className="flex items-center justify-between rounded-xl bg-surface-hover/50 p-4">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/15">
