@@ -9,6 +9,7 @@ import { DashboardView } from "@/components/views/DashboardView";
 import { ConstructorView } from "@/components/views/ConstructorView";
 import { SettingsView } from "@/components/views/SettingsView";
 import { FieldDetailDrawer } from "@/components/field/FieldDetailDrawer";
+import { MaterialSymbols } from "@/components/ui/MaterialSymbols";
 import { useDashboardStore } from "@/store/dashboardStore";
 import { useAppStore } from "@/store/appStore";
 import { useDataStore } from "@/store/dataStore";
@@ -75,6 +76,7 @@ export function DashboardApp() {
 
   return (
     <div className="flex h-[100dvh] overflow-hidden bg-background">
+      <MaterialSymbols />
       <div className="hidden lg:flex">
         <AppSidebar />
       </div>

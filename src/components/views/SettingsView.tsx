@@ -48,7 +48,7 @@ function SettingSection({
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10">
           <Icon className="h-4 w-4 text-accent" />
         </div>
-        <h2 className="font-semibold text-white">{title}</h2>
+        <h2 className="font-semibold text-foreground">{title}</h2>
       </div>
       <div className="divide-y divide-surface-border/60">{children}</div>
     </section>
@@ -67,7 +67,7 @@ function SettingRow({
   return (
     <div className="flex items-center justify-between gap-4 px-5 py-4">
       <div>
-        <p className="text-sm font-medium text-white">{label}</p>
+        <p className="text-sm font-medium text-foreground">{label}</p>
         {description && (
           <p className="mt-0.5 text-xs text-slate-500">{description}</p>
         )}
