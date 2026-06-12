@@ -1,0 +1,29 @@
+
+> biopole-agropulse@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.21
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/4) ...
+   Generating static pages (1/4) 
+   Generating static pages (2/4) 
+   Generating static pages (3/4) 
+ ✓ Generating static pages (4/4)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    46 kB           133 kB
+└ ○ /_not-found                          873 B          88.1 kB
++ First Load JS shared by all            87.2 kB
+  ├ chunks/117-fec211bcdbffbf7c.js       31.6 kB
+  ├ chunks/fd9d1056-bb367eba3fb38883.js  53.6 kB
+  └ other shared chunks (total)          2 kB
+
+
+○  (Static)  prerendered as static content
+

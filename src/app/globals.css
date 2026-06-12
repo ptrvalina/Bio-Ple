@@ -1,0 +1,265 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0b1220;
+  --foreground: #f1f5f9;
+  --brand: #10b981;
+  --surface-border: #243044;
+  --surface-border-light: #2d3b52;
+  --surface-card: #151f32;
+  --surface-card-hover: #1a2740;
+  --surface-hover: #1e2d45;
+  --surface-muted: #64748b;
+}
+
+body {
+  color: var(--foreground);
+  background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse 90% 60% at 50% -30%, rgba(16, 185, 129, 0.12), transparent),
+    radial-gradient(ellipse 50% 40% at 100% 0%, rgba(59, 130, 246, 0.06), transparent);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Карточки */
+.glass-card {
+  border-radius: 1rem;
+  border: 1px solid var(--surface-border);
+  background-color: rgba(21, 31, 50, 0.9);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
+}
+
+.glass-card-hover {
+  border-radius: 1rem;
+  border: 1px solid var(--surface-border);
+  background-color: rgba(21, 31, 50, 0.9);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(12px);
+  transition: all 0.2s ease;
+}
+
+.glass-card-hover:hover {
+  border-color: var(--surface-border-light);
+  background-color: var(--surface-card-hover);
+}
+
+/* Кнопки */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  background-color: var(--brand);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fff;
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.2);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-primary:hover {
+  background-color: #34d399;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--surface-border);
+  background-color: var(--surface-hover);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #cbd5e1;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--surface-border-light);
+  background-color: var(--surface-card-hover);
+  color: #fff;
+}
+
+.btn-secondary:active {
+  transform: scale(0.98);
+}
+
+/* Навигация */
+.nav-item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #94a3b8;
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  background-color: var(--surface-hover);
+  color: #fff;
+}
+
+.nav-item-active {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--brand);
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+}
+
+.widget-content {
+  flex: 1;
+  overflow: auto;
+  padding: 1rem;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #fff;
+}
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--surface-muted);
+}
+
+/* react-grid-layout */
+.react-grid-layout {
+  position: relative;
+  min-height: 500px;
+  transition: height 200ms ease;
+}
+
+.react-grid-item {
+  transition: all 200ms ease;
+  transition-property: left, top, width, height;
+}
+
+.react-grid-item.cssTransforms {
+  transition-property: transform, width, height;
+}
+
+.react-grid-item.resizing {
+  transition: none;
+  z-index: 1;
+  will-change: width, height;
+}
+
+.react-grid-item.react-draggable-dragging {
+  transition: none;
+  opacity: 0.8;
+  z-index: 100;
+  will-change: transform;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+}
+
+.react-grid-item.dropping {
+  visibility: hidden;
+}
+
+.react-grid-item.react-grid-placeholder {
+  background: rgba(16, 185, 129, 0.12) !important;
+  border: 2px dashed rgba(16, 185, 129, 0.45) !important;
+  border-radius: 1rem !important;
+  opacity: 0.9 !important;
+  transition-duration: 100ms;
+  z-index: 2;
+  user-select: none;
+}
+
+.react-grid-item > .react-resizable-handle {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Мобильная адаптация */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.h-screen-safe {
+  height: 100dvh;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .stat-value {
+    font-size: 1.25rem;
+  }
+
+  .glass-card-hover {
+    padding: 0.75rem !important;
+  }
+
+  .widget-content {
+    padding: 0.75rem;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
