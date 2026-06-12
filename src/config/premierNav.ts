@@ -6,11 +6,11 @@ export const PREMIER_NAV: {
   symbol: string;
   mobileSymbol?: string;
 }[] = [
-  { id: "dashboard", label: "Dashboard", symbol: "dashboard", mobileSymbol: "potted_plant" },
-  { id: "analytics", label: "Analytics", symbol: "analytics" },
-  { id: "operations", label: "Operations", symbol: "precision_manufacturing" },
-  { id: "constructor", label: "Constructor", symbol: "grid_view", mobileSymbol: "precision_manufacturing" },
-  { id: "settings", label: "Settings", symbol: "settings" },
+  { id: "dashboard", label: "Главная", symbol: "home", mobileSymbol: "potted_plant" },
+  { id: "analytics", label: "Аналитика", symbol: "analytics" },
+  { id: "operations", label: "Операции", symbol: "precision_manufacturing" },
+  { id: "constructor", label: "Конструктор", symbol: "grid_view", mobileSymbol: "precision_manufacturing" },
+  { id: "settings", label: "Настройки", symbol: "settings" },
 ];
 
 export const PREMIER_MOBILE_NAV: AppView[] = [
@@ -24,7 +24,7 @@ export const PREMIER_MOBILE_NAV: AppView[] = [
 export function viewTitle(view: AppView): string {
   switch (view) {
     case "dashboard":
-      return "Command Center";
+      return "Главная";
     case "analytics":
       return "Analytics Terminal";
     case "operations":
@@ -34,6 +34,6 @@ export function viewTitle(view: AppView): string {
     case "settings":
       return "System Configuration";
     default:
-      return "Command Center";
+      return "Главная";
   }
 }

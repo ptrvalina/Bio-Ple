@@ -23,9 +23,11 @@ const DashboardResponsiveGrid = dynamic(
 
 interface DashboardGridProps {
   mode: "view" | "edit";
+  /** Встроенная панель на главной — компактнее, без большого empty-state */
+  embedded?: boolean;
 }
 
-export function DashboardGrid({ mode }: DashboardGridProps) {
+export function DashboardGrid({ mode, embedded = false }: DashboardGridProps) {
   const widgets = useDashboardStore((s) => s.widgets);
   const layouts = useDashboardStore((s) => s.layouts);
   const removingIds = useDashboardStore((s) => s.removingIds);
@@ -106,10 +108,13 @@ export function DashboardGrid({ mode }: DashboardGridProps) {
 
   const gridWidth = width > 0 ? width : undefined;
 
+  const minPanel = embedded ? "min-h-[240px]" : "min-h-[420px]";
+  const minEmpty = embedded ? "min-h-[200px]" : "min-h-[360px]";
+
   return (
     <div
       ref={containerRef}
-      className={`relative min-h-[420px] w-full min-w-0 flex-1 overflow-auto p-5 transition ${
+      className={`relative ${minPanel} w-full min-w-0 flex-1 overflow-auto p-3 transition sm:p-4 ${
         isEdit && isDraggingFromSidebar
           ? "bg-accent/5 ring-2 ring-inset ring-accent/20"
           : ""
@@ -122,7 +127,24 @@ export function DashboardGrid({ mode }: DashboardGridProps) {
           Загрузка рабочего стола...
         </div>
       ) : widgets.length === 0 ? (
-        <div className="flex min-h-[360px] flex-col items-center justify-center gap-4 text-center">
+        embedded ? (
+          <div className={`flex ${minEmpty} flex-col items-center justify-center gap-2 px-4 text-center`}>
+            <span className="material-symbols-outlined text-3xl text-surface-muted/50">
+              widgets
+            </span>
+            <p className="text-sm text-surface-muted">
+              Модули не добавлены
+            </p>
+            <button
+              type="button"
+              onClick={() => setView("constructor")}
+              className="label-caps mt-1 text-[10px] text-accent hover:underline"
+            >
+              Открыть конструктор
+            </button>
+          </div>
+        ) : (
+        <div className={`flex ${minEmpty} flex-col items-center justify-center gap-4 text-center`}>
           <p className="label-caps text-surface-muted">Рабочий стол пуст</p>
           <p className="max-w-sm text-sm text-surface-muted">
             Восстановите раскладку по умолчанию или откройте конструктор
@@ -140,6 +162,7 @@ export function DashboardGrid({ mode }: DashboardGridProps) {
             </button>
           </div>
         </div>
+        )
       ) : gridWidth ? (
         <DashboardResponsiveGrid
           width={gridWidth}
