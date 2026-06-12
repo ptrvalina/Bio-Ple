@@ -30,7 +30,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   RefreshCw,
 };
 
-const DRAG_TYPE = "application/agropulse-widget";
+import { DRAG_TYPE } from "@/components/constructor/dragTypes";
 
 interface SidebarItemProps {
   type: string;
@@ -126,4 +126,3 @@ export function Sidebar() {
   );
 }
 
-export { DRAG_TYPE };

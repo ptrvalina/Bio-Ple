@@ -80,7 +80,7 @@ export function DashboardApp() {
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col lg:ml-64">
-        <PremierTopBar />
+        {view !== "constructor" && <PremierTopBar />}
         <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
           {view === "dashboard" && <DashboardView />}
           {view === "analytics" && <AnalyticsView />}

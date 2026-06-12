@@ -30,7 +30,7 @@ export function viewTitle(view: AppView): string {
     case "operations":
       return "Operations Deck";
     case "constructor":
-      return "Widget Constructor";
+      return "Конструктор виджетов";
     case "settings":
       return "System Configuration";
     default:

@@ -13,7 +13,7 @@ import { useDashboardStore } from "@/store/dashboardStore";
 import { useAppStore } from "@/store/appStore";
 import { useContainerWidth } from "@/hooks/useContainerWidth";
 import { WidgetShell } from "./WidgetShell";
-import { DRAG_TYPE } from "@/components/layout/Sidebar";
+import { DRAG_TYPE } from "@/components/constructor/dragTypes";
 
 const DashboardResponsiveGrid = dynamic(
   () =>
