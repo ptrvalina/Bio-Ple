@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
-import { Bell, Database, Globe, Shield, User } from "lucide-react";
+import { useState } from "react";
 import { ServiceHealthPanel } from "@/components/platform/ServiceHealthPanel";
 import { useDataStore } from "@/store/dataStore";
 import { useThemeStore } from "@/store/themeStore";
@@ -33,50 +32,6 @@ function Toggle({
   );
 }
 
-function SettingSection({
-  icon: Icon,
-  title,
-  children,
-}: {
-  icon: typeof User;
-  title: string;
-  children: ReactNode;
-}) {
-  return (
-    <section className="glass-card overflow-hidden">
-      <div className="flex items-center gap-3 border-b border-surface-border px-5 py-4">
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10">
-          <Icon className="h-4 w-4 text-accent" />
-        </div>
-        <h2 className="font-semibold text-foreground">{title}</h2>
-      </div>
-      <div className="divide-y divide-surface-border/60">{children}</div>
-    </section>
-  );
-}
-
-function SettingRow({
-  label,
-  description,
-  children,
-}: {
-  label: string;
-  description?: string;
-  children: ReactNode;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-4 px-5 py-4">
-      <div>
-        <p className="text-sm font-medium text-foreground">{label}</p>
-        {description && (
-          <p className="mt-0.5 text-xs text-slate-500">{description}</p>
-        )}
-      </div>
-      {children}
-    </div>
-  );
-}
-
 export function SettingsView() {
   const addToast = useToastStore((s) => s.addToast);
   const fields = useDataStore((s) => s.fields);
@@ -85,84 +40,150 @@ export function SettingsView() {
   const [alerts, setAlerts] = useState(true);
   const [weather, setWeather] = useState(true);
   const [autoSave, setAutoSave] = useState(false);
+  const [operatorName, setOperatorName] = useState("ИВАНОВ_А_С");
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="mx-auto max-w-3xl space-y-5 p-5 animate-fade-in">
-        <SettingSection icon={User} title="Профиль">
-          <SettingRow label="Агроном" description="Иванов Алексей Сергеевич">
-            <span className="rounded-lg bg-surface-hover px-3 py-1.5 text-sm text-slate-300">
-              Главный агроном
-            </span>
-          </SettingRow>
-          <SettingRow label="Хозяйство" description="ООО «БиоПоле» · 317.5 га">
-            <span className="text-sm text-accent">{fields.length} полей</span>
-          </SettingRow>
-        </SettingSection>
+      <div className="mx-auto max-w-7xl animate-fade-in p-4 sm:p-8 lg:p-12">
+        <div className="mb-8 lg:mb-12">
+          <h3 className="text-xl font-semibold text-foreground sm:text-2xl">
+            System Configuration
+          </h3>
+          <p className="mt-2 max-w-2xl text-surface-muted">
+            Настройка протоколов допуска, персистентности и модульных компонентов
+            BIOPOLAR AGROPULSE Premier V2.
+          </p>
+        </div>
 
-        <ServiceHealthPanel />
+        <div className="grid grid-cols-12 gap-4 sm:gap-6">
+          <div className="premier-glass premier-pulse-accent relative col-span-12 overflow-hidden p-6 sm:p-8 lg:col-span-8">
+            <div className="absolute right-4 top-4 opacity-10">
+              <span className="material-symbols-outlined text-9xl">fingerprint</span>
+            </div>
+            <div className="relative z-10">
+              <div className="mb-6 flex items-center sm:mb-8">
+                <span className="material-symbols-outlined mr-3 text-accent">verified_user</span>
+                <h4 className="label-caps text-base text-foreground">
+                  Identity Management & Clearance
+                </h4>
+              </div>
+              <div className="grid gap-6 sm:grid-cols-2 sm:gap-8">
+                <div className="space-y-6">
+                  <div>
+                    <label className="label-caps mb-2 block text-surface-muted opacity-70">
+                      Operator Designation
+                    </label>
+                    <div className="flex items-center border-b border-white/20 py-2">
+                      <input
+                        className="w-full border-none bg-transparent font-data-sm text-accent focus:ring-0"
+                        value={operatorName}
+                        onChange={(e) => setOperatorName(e.target.value)}
+                      />
+                      <span className="material-symbols-outlined text-sm text-surface-muted">
+                        edit
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="label-caps mb-2 block text-surface-muted opacity-70">
+                      Biometric Sync State
+                    </label>
+                    <div className="flex items-center gap-3">
+                      <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface-hover">
+                        <div className="h-full w-4/5 bg-accent shadow-glow" />
+                      </div>
+                      <span className="font-data-sm text-accent">88% Match</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="border border-white/10 bg-surface-hover/50 p-4">
+                  <div className="mb-2 flex items-start justify-between">
+                    <span className="label-caps text-amber-400">Clearance Elevation</span>
+                    <span className="material-symbols-outlined text-sm text-amber-400">lock</span>
+                  </div>
+                  <p className="font-data-sm text-sm leading-relaxed text-surface-muted">
+                    Level 5 elevation requires physical key-turn verification at primary hub.
+                  </p>
+                  <button
+                    type="button"
+                    className="label-caps mt-4 bg-amber-400 px-4 py-2 text-[#412d00] transition hover:brightness-110"
+                  >
+                    REQUEST OVERRIDE
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <SettingSection icon={Bell} title="Уведомления">
-          <SettingRow
-            label="Алерты по отклонениям"
-            description="Расхождения норм и план/факт"
-          >
-            <Toggle
-              enabled={alerts}
-              onChange={(v) => {
-                setAlerts(v);
-                addToast(v ? "Алерты включены" : "Алерты отключены", "info");
-              }}
-            />
-          </SettingRow>
-          <SettingRow
-            label="Погодные предупреждения"
-            description="Нелётная погода, осадки"
-          >
-            <Toggle enabled={weather} onChange={setWeather} />
-          </SettingRow>
-        </SettingSection>
+          <div className="premier-glass col-span-12 p-6 lg:col-span-4">
+            <h4 className="label-caps mb-4 text-surface-muted">Interface Theme</h4>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium">Cyber Premier</p>
+                  <p className="text-xs text-surface-muted">Тёмная миссионная тема</p>
+                </div>
+                <Toggle
+                  enabled={theme === "cyber"}
+                  onChange={(v) => {
+                    setTheme(v ? "cyber" : "enterprise");
+                    addToast(v ? "Тема Cyber Premier" : "Тема Enterprise Light", "info");
+                  }}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <p className="text-sm">Язык</p>
+                <span className="font-data-sm text-accent">RU</span>
+              </div>
+            </div>
+          </div>
 
-        <SettingSection icon={Database} title="Данные и интеграции">
-          <SettingRow label="Источник данных" description="REST API · 5 микросервисов">
-            <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-400">
-              /api/v1
-            </span>
-          </SettingRow>
-          <SettingRow
-            label="Автосохранение дашборда"
-            description="Сохранять при каждом изменении"
-          >
-            <Toggle enabled={autoSave} onChange={setAutoSave} />
-          </SettingRow>
-        </SettingSection>
+          <div className="premier-glass col-span-12 p-6 lg:col-span-6">
+            <h4 className="label-caps mb-4 text-surface-muted">Notifications</h4>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm">Алерты по отклонениям</p>
+                  <p className="text-xs text-surface-muted">План/факт и нормы</p>
+                </div>
+                <Toggle
+                  enabled={alerts}
+                  onChange={(v) => {
+                    setAlerts(v);
+                    addToast(v ? "Алерты включены" : "Алерты отключены", "info");
+                  }}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <p className="text-sm">Погодные предупреждения</p>
+                <Toggle enabled={weather} onChange={setWeather} />
+              </div>
+            </div>
+          </div>
 
-        <SettingSection icon={Globe} title="Интерфейс">
-          <SettingRow
-            label="Тема Cyber Premier"
-            description="Тёмная миссионная / светлая enterprise"
-          >
-            <Toggle
-              enabled={theme === "cyber"}
-              onChange={(v) => {
-                setTheme(v ? "cyber" : "enterprise");
-                addToast(
-                  v ? "Тема Cyber Premier" : "Тема Enterprise Light",
-                  "info"
-                );
-              }}
-            />
-          </SettingRow>
-          <SettingRow label="Язык">
-            <span className="text-sm text-slate-400">Русский</span>
-          </SettingRow>
-        </SettingSection>
+          <div className="premier-glass col-span-12 p-6 lg:col-span-6">
+            <h4 className="label-caps mb-4 text-surface-muted">Data & Integrations</h4>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm">REST API</p>
+                  <p className="text-xs text-surface-muted">5 микросервисов · {fields.length} полей</p>
+                </div>
+                <span className="label-caps rounded-full bg-accent/15 px-3 py-1 text-accent">
+                  /api/v1
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <p className="text-sm">Автосохранение дашборда</p>
+                <Toggle enabled={autoSave} onChange={setAutoSave} />
+              </div>
+            </div>
+          </div>
 
-        <SettingSection icon={Shield} title="Безопасность">
-          <SettingRow label="Версия" description="BioPole AgroPulse">
-            <span className="font-mono text-sm text-slate-500">v1.1.0</span>
-          </SettingRow>
-        </SettingSection>
+          <div className="col-span-12">
+            <ServiceHealthPanel />
+          </div>
+        </div>
       </div>
     </div>
   );

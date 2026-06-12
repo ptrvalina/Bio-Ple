@@ -1,30 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { LayoutDashboard, Settings, Wrench } from "lucide-react";
-import { AppSidebar } from "@/components/layout/AppSidebar";
-import { TopStatusBar } from "@/components/layout/TopStatusBar";
+import { PremierSidebar } from "@/components/layout/PremierSidebar";
+import { PremierTopBar } from "@/components/layout/PremierTopBar";
 import { ToastContainer } from "@/components/ui/ToastContainer";
-import { DashboardView } from "@/components/views/DashboardView";
+import { MaterialSymbols } from "@/components/ui/MaterialSymbols";
+import { AnalyticsView } from "@/components/views/AnalyticsView";
 import { ConstructorView } from "@/components/views/ConstructorView";
+import { DashboardView } from "@/components/views/DashboardView";
+import { OperationsView } from "@/components/views/OperationsView";
 import { SettingsView } from "@/components/views/SettingsView";
 import { FieldDetailDrawer } from "@/components/field/FieldDetailDrawer";
-import { MaterialSymbols } from "@/components/ui/MaterialSymbols";
+import { PREMIER_MOBILE_NAV, PREMIER_NAV } from "@/config/premierNav";
 import { useDashboardStore } from "@/store/dashboardStore";
 import { useAppStore } from "@/store/appStore";
 import { useDataStore } from "@/store/dataStore";
 import { useThemeStore } from "@/store/themeStore";
-import type { AppView } from "@/types/data";
-
-const MOBILE_NAV: {
-  id: AppView;
-  icon: typeof LayoutDashboard;
-  symbol: string;
-}[] = [
-  { id: "dashboard", icon: LayoutDashboard, symbol: "potted_plant" },
-  { id: "constructor", icon: Wrench, symbol: "precision_manufacturing" },
-  { id: "settings", icon: Settings, symbol: "settings" },
-];
 
 function SplashScreen() {
   return (
@@ -71,50 +62,60 @@ export function DashboardApp() {
   const ready = dashboardReady && dataReady;
 
   if (!ready || showSplash) {
-    return <SplashScreen />;
+    return (
+      <>
+        <MaterialSymbols />
+        <SplashScreen />
+      </>
+    );
   }
 
   return (
     <div className="flex h-[100dvh] overflow-hidden bg-background">
       <MaterialSymbols />
-      <div className="hidden lg:flex">
-        <AppSidebar />
+      <div className="premier-grain pointer-events-none" />
+
+      <div className="hidden lg:block">
+        <PremierSidebar />
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <TopStatusBar />
+      <div className="flex min-w-0 flex-1 flex-col lg:ml-64">
+        <PremierTopBar />
         <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
           {view === "dashboard" && <DashboardView />}
+          {view === "analytics" && <AnalyticsView />}
+          {view === "operations" && <OperationsView />}
           {view === "constructor" && <ConstructorView />}
           {view === "settings" && <SettingsView />}
         </main>
 
-        {/* Floating pill nav (Premier mobile) */}
-        <nav className="mobile-nav-pill fixed bottom-6 left-1/2 z-50 flex w-[90%] max-w-md -translate-x-1/2 items-center justify-around rounded-full px-6 py-3 pb-safe lg:hidden">
-          {MOBILE_NAV.map(({ id, symbol }) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => setView(id)}
-              className={`flex h-12 w-12 items-center justify-center rounded-full transition-all active:scale-90 ${
-                view === id
-                  ? "mobile-nav-active scale-110"
-                  : "text-surface-muted hover:text-accent"
-              }`}
-              aria-label={id}
-            >
-              <span
-                className="material-symbols-outlined"
-                style={
-                  view === id
-                    ? { fontVariationSettings: "'FILL' 1" }
-                    : undefined
-                }
+        <nav className="mobile-nav-pill fixed bottom-6 left-1/2 z-50 flex w-[95%] max-w-lg -translate-x-1/2 items-center justify-around rounded-full px-3 py-2 pb-safe lg:hidden">
+          {PREMIER_MOBILE_NAV.map((id) => {
+            const item = PREMIER_NAV.find((n) => n.id === id)!;
+            const active = view === id;
+            return (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setView(id)}
+                className={`flex h-11 w-11 items-center justify-center rounded-full transition-all active:scale-90 ${
+                  active
+                    ? "mobile-nav-active scale-110"
+                    : "text-surface-muted hover:text-accent"
+                }`}
+                aria-label={item.label}
               >
-                {symbol}
-              </span>
-            </button>
-          ))}
+                <span
+                  className="material-symbols-outlined text-xl"
+                  style={
+                    active ? { fontVariationSettings: "'FILL' 1" } : undefined
+                  }
+                >
+                  {item.mobileSymbol ?? item.symbol}
+                </span>
+              </button>
+            );
+          })}
         </nav>
       </div>
 

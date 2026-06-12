@@ -88,4 +88,9 @@ export interface PlanFactDeviation {
   deviationPercent: number;
 }
 
-export type AppView = "dashboard" | "constructor" | "settings";
+export type AppView =
+  | "dashboard"
+  | "analytics"
+  | "operations"
+  | "constructor"
+  | "settings";
