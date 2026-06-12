@@ -9,6 +9,7 @@ import {
 } from "react";
 import type { Layout, Layouts } from "react-grid-layout";
 import { useDashboardStore } from "@/store/dashboardStore";
+import { useAppStore } from "@/store/appStore";
 import { useContainerWidth } from "@/hooks/useContainerWidth";
 import { WidgetShell } from "./WidgetShell";
 import { DRAG_TYPE } from "@/components/layout/Sidebar";
@@ -32,16 +33,17 @@ export function DashboardGrid({ mode }: DashboardGridProps) {
   const finishRemoveWidget = useDashboardStore((s) => s.finishRemoveWidget);
   const setWidgetWidth = useDashboardStore((s) => s.setWidgetWidth);
   const setDraggingFromSidebar = useDashboardStore((s) => s.setDraggingFromSidebar);
+  const resetConfig = useDashboardStore((s) => s.resetConfig);
+  const setView = useAppStore((s) => s.setView);
 
-  const [mounted, setMounted] = useState(false);
-  const { containerRef, width } = useContainerWidth(mounted);
-  const [isDraggingItem, setIsDraggingItem] = useState(false);
+  const { containerRef, width } = useContainerWidth();
   const [isMobile, setIsMobile] = useState(false);
+  const [clientReady, setClientReady] = useState(false);
 
   const isEdit = mode === "edit";
 
   useEffect(() => {
-    setMounted(true);
+    setClientReady(true);
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener("resize", checkMobile);
@@ -99,37 +101,46 @@ export function DashboardGrid({ mode }: DashboardGridProps) {
     ]
   );
 
-  if (!mounted) {
-    return (
-      <div className="flex flex-1 items-center justify-center text-slate-500">
-        Загрузка рабочего стола...
-      </div>
-    );
-  }
+  const gridWidth = width > 0 ? width : undefined;
 
   return (
     <div
       ref={containerRef}
-      className={`relative flex-1 overflow-auto p-5 transition ${
+      className={`relative min-h-[420px] w-full min-w-0 flex-1 overflow-auto p-5 transition ${
         isEdit && isDraggingFromSidebar
           ? "bg-accent/5 ring-2 ring-inset ring-accent/20"
           : ""
-      } ${isEdit && isDraggingItem ? "" : ""}`}
+      }`}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
     >
-      {widgets.length === 0 ? (
-        <div className="flex flex-1 flex-col items-center justify-center gap-3 py-20 text-center">
-          <p className="label-caps text-surface-muted">Рабочий стол пуст</p>
-          <p className="text-sm text-surface-muted">
-            Откройте «Constructor» и добавьте виджеты, или нажмите «Сбросить» в
-            конструкторе
-          </p>
+      {!clientReady ? (
+        <div className="flex min-h-[360px] items-center justify-center text-surface-muted">
+          Загрузка рабочего стола...
         </div>
-      ) : width > 0 ? (
+      ) : widgets.length === 0 ? (
+        <div className="flex min-h-[360px] flex-col items-center justify-center gap-4 text-center">
+          <p className="label-caps text-surface-muted">Рабочий стол пуст</p>
+          <p className="max-w-sm text-sm text-surface-muted">
+            Восстановите раскладку по умолчанию или откройте конструктор
+          </p>
+          <div className="flex flex-wrap justify-center gap-2">
+            <button type="button" onClick={() => resetConfig()} className="btn-primary">
+              Восстановить виджеты
+            </button>
+            <button
+              type="button"
+              onClick={() => setView("constructor")}
+              className="btn-secondary"
+            >
+              Конструктор
+            </button>
+          </div>
+        </div>
+      ) : gridWidth ? (
         <Responsive
           className="layout"
-          width={width}
+          width={gridWidth}
           layouts={layouts}
           breakpoints={BREAKPOINTS}
           cols={COLS}
@@ -137,9 +148,7 @@ export function DashboardGrid({ mode }: DashboardGridProps) {
           margin={[16, 16]}
           containerPadding={[0, 0]}
           onLayoutChange={handleLayoutChange}
-          onDragStart={() => setIsDraggingItem(true)}
-          onDragStop={() => setIsDraggingItem(false)}
-          draggableHandle={isEdit ? ".widget-drag-handle" : ".no-drag"}
+          draggableHandle={isEdit ? ".widget-drag-handle" : undefined}
           isDraggable={isEdit && !isMobile}
           isResizable={false}
           compactType="vertical"
@@ -148,8 +157,11 @@ export function DashboardGrid({ mode }: DashboardGridProps) {
           {children}
         </Responsive>
       ) : (
-        <div className="flex flex-1 items-center justify-center py-20 text-sm text-surface-muted">
-          Загрузка сетки...
+        <div className="flex min-h-[360px] flex-col gap-4">
+          <p className="text-center text-sm text-surface-muted">Загрузка сетки...</p>
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {children}
+          </div>
         </div>
       )}
     </div>

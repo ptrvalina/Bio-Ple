@@ -1,33 +1,88 @@
 "use client";
 
-import { useEffect, useRef, useState, type RefObject } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-/** Измеряет ширину контейнера через ResizeObserver (замена WidthProvider) */
-export function useContainerWidth(enabled = true): {
-  containerRef: RefObject<HTMLDivElement>;
-  width: number;
-} {
-  const containerRef = useRef<HTMLDivElement>(null);
+function measureNodeWidth(node: HTMLElement): number {
+  const rect = Math.floor(node.getBoundingClientRect().width);
+  if (rect > 0) return rect;
+
+  const client = node.clientWidth;
+  if (client > 0) return client;
+
+  const parent = node.parentElement?.clientWidth;
+  if (parent && parent > 0) return parent;
+
+  return 0;
+}
+
+/** Измеряет ширину контейнера через ResizeObserver + callback ref */
+export function useContainerWidth() {
   const [width, setWidth] = useState(0);
+  const observerRef = useRef<ResizeObserver | null>(null);
+  const nodeRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    if (!enabled) return;
+  const containerRef = useCallback((node: HTMLDivElement | null) => {
+    observerRef.current?.disconnect();
+    observerRef.current = null;
+    nodeRef.current = node;
 
-    const element = containerRef.current;
-    if (!element) return;
+    if (!node) {
+      setWidth(0);
+      return;
+    }
 
     const updateWidth = () => {
-      const next = element.getBoundingClientRect().width;
-      setWidth((prev) => (prev !== next ? next : prev));
+      const next = measureNodeWidth(node);
+      if (next > 0) {
+        setWidth(next);
+        return true;
+      }
+      return false;
     };
 
-    updateWidth();
+    if (!updateWidth()) {
+      requestAnimationFrame(updateWidth);
+      requestAnimationFrame(() => requestAnimationFrame(updateWidth));
+    }
 
     const observer = new ResizeObserver(updateWidth);
-    observer.observe(element);
+    observer.observe(node);
+    observerRef.current = observer;
+  }, []);
 
-    return () => observer.disconnect();
-  }, [enabled]);
+  // Fallback: некоторые браузеры отдают 0 до первого layout pass
+  useEffect(() => {
+    if (width > 0) return;
+
+    let attempts = 0;
+    const retry = () => {
+      const node = nodeRef.current;
+      if (!node) return;
+
+      const measured = measureNodeWidth(node);
+      if (measured > 0) {
+        setWidth(measured);
+        return;
+      }
+
+      attempts += 1;
+      if (attempts < 20) {
+        window.setTimeout(retry, 50);
+        return;
+      }
+
+      const fallback = Math.floor(
+        node.parentElement?.clientWidth || window.innerWidth
+      );
+      if (fallback > 0) {
+        setWidth(fallback);
+      }
+    };
+
+    retry();
+    window.addEventListener("resize", retry);
+    return () => window.removeEventListener("resize", retry);
+  }, [width]);
 
   return { containerRef, width };
 }

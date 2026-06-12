@@ -1,11 +1,29 @@
 "use client";
 
 import type { ComponentType } from "react";
-import GridLayout from "react-grid-layout";
+import * as ReactGridLayout from "react-grid-layout";
 
-type GridLayoutModule = typeof GridLayout & {
-  Responsive: ComponentType<Record<string, unknown>>;
+type ResponsiveComponent = ComponentType<Record<string, unknown>>;
+
+type RGLModule = {
+  Responsive?: ResponsiveComponent;
+  default?: ResponsiveComponent & { Responsive?: ResponsiveComponent };
 };
 
-/** Responsive из CJS-пакета react-grid-layout */
-export const Responsive = (GridLayout as GridLayoutModule).Responsive;
+/**
+ * react-grid-layout is CJS: Responsive is on module.exports, not always on the default ESM import.
+ */
+function resolveResponsive(): ResponsiveComponent {
+  const mod = ReactGridLayout as unknown as RGLModule;
+  const fromNamespace = mod.Responsive;
+  if (fromNamespace) return fromNamespace;
+
+  const fromDefault = mod.default?.Responsive;
+  if (fromDefault) return fromDefault;
+
+  throw new Error(
+    "[AgroPulse] react-grid-layout Responsive export is missing — check bundler CJS interop"
+  );
+}
+
+export const Responsive = resolveResponsive();

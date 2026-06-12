@@ -69,3 +69,54 @@ export function createDefaultState(): {
     layouts: { lg: lgLayout, md: mdLayout, sm: smLayout },
   };
 }
+
+/** Вертикальная раскладка для произвольного набора виджетов (восстановление после битого localStorage) */
+export function generateLayoutsForWidgets(widgets: DashboardWidget[]): Layouts {
+  let lgY = 0;
+  let mdY = 0;
+
+  const lg = widgets.map((widget) => {
+    const w = Math.min(widget.config.width ?? 3, 12);
+    const item = {
+      i: widget.id,
+      x: 0,
+      y: lgY,
+      w,
+      h: 3,
+      minW: 2,
+      maxW: 12,
+      minH: 2,
+    };
+    lgY += 3;
+    return item;
+  });
+
+  const md = widgets.map((widget) => {
+    const w = Math.min(widget.config.width ?? 3, 6);
+    const item = {
+      i: widget.id,
+      x: 0,
+      y: mdY,
+      w,
+      h: 3,
+      minW: 2,
+      maxW: 6,
+      minH: 2,
+    };
+    mdY += 3;
+    return item;
+  });
+
+  const sm = widgets.map((widget, index) => ({
+    i: widget.id,
+    x: 0,
+    y: index * 3,
+    w: 1,
+    h: 3,
+    minW: 1,
+    maxW: 1,
+    minH: 2,
+  }));
+
+  return { lg, md, sm };
+}

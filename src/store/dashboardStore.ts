@@ -5,7 +5,11 @@ import type { DashboardWidget, Layout, Layouts } from "@/types/widget";
 import { isValidWidth } from "@/types/widget";
 import { createDefaultState } from "@/config/defaultLayout";
 import { getWidgetDefinition } from "@/config/widgetRegistry";
-import { loadDashboardConfig, saveDashboardConfig } from "@/lib/storage";
+import {
+  loadDashboardConfig,
+  repairDashboardConfig,
+  saveDashboardConfig,
+} from "@/lib/storage";
 
 interface DashboardState {
   widgets: DashboardWidget[];
@@ -68,20 +72,15 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
 
   initialize: () => {
     if (get().initialized) return;
-    const saved = loadDashboardConfig();
-    const defaults = createDefaultState();
 
-    if (saved && saved.widgets.length > 0) {
-      set({
-        widgets: saved.widgets,
-        layouts: saved.layouts,
-        initialized: true,
-      });
-    } else {
-      set({ ...defaults, initialized: true });
-      if (!saved || saved.widgets.length === 0) {
-        saveDashboardConfig(defaults);
-      }
+    const defaults = createDefaultState();
+    const saved = loadDashboardConfig();
+    const config = repairDashboardConfig(saved);
+
+    set({ ...config, initialized: true });
+
+    if (!saved) {
+      saveDashboardConfig(config);
     }
   },
 
