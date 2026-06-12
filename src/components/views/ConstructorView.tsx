@@ -12,7 +12,7 @@ export function ConstructorView() {
         <div className="hidden lg:block">
           <Sidebar />
         </div>
-        <div className="relative min-w-0 flex-1 bg-grid-pattern bg-grid bg-surface/50">
+        <div className="relative min-w-0 flex-1 bg-grid-premier bg-surface/50 pb-24 lg:pb-0">
           <DashboardGrid mode="edit" />
         </div>
       </div>

@@ -1,0 +1,18 @@
+﻿=== Bio Pole Deploy Log ===
+
+commit hash: 820db110f7176f90152218dc896ce1d701a07160
+push: success
+remote: https://github.com/ptrvalina/Bio-Ple.git
+range: 1a55611 to 820db11 on main
+deploy URL: https://bio-pole.vercel.app
+deployment: https://bio-pole-cdpat3yej-ptrvalinas-projects.vercel.app
+inspect: https://vercel.com/ptrvalinas-projects/bio-pole/Ewpb85im88e8s3ZjR17cFPcPHeca
+
+errors:
+- gh not installed
+- first vercel failed due to folder name Bio Pole; fixed with --name bio-pole
+- Vercel linked bio-pole and connected GitHub
+
+staging: all files except .env and credentials.json (none present)
+commit message: Add REST API routes and unify dashboard with constructor
+2026-06-12T16:07:59.7222194+03:00

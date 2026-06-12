@@ -4,6 +4,7 @@ import { useState, type ReactNode } from "react";
 import { Bell, Database, Globe, Shield, User } from "lucide-react";
 import { ServiceHealthPanel } from "@/components/platform/ServiceHealthPanel";
 import { useDataStore } from "@/store/dataStore";
+import { useThemeStore } from "@/store/themeStore";
 import { useToastStore } from "@/store/toastStore";
 
 function Toggle({
@@ -79,9 +80,10 @@ function SettingRow({
 export function SettingsView() {
   const addToast = useToastStore((s) => s.addToast);
   const fields = useDataStore((s) => s.fields);
+  const theme = useThemeStore((s) => s.theme);
+  const setTheme = useThemeStore((s) => s.setTheme);
   const [alerts, setAlerts] = useState(true);
   const [weather, setWeather] = useState(true);
-  const [darkMode, setDarkMode] = useState(true);
   const [autoSave, setAutoSave] = useState(false);
 
   return (
@@ -136,8 +138,20 @@ export function SettingsView() {
         </SettingSection>
 
         <SettingSection icon={Globe} title="Интерфейс">
-          <SettingRow label="Тёмная тема">
-            <Toggle enabled={darkMode} onChange={setDarkMode} />
+          <SettingRow
+            label="Тема Cyber Premier"
+            description="Тёмная миссионная / светлая enterprise"
+          >
+            <Toggle
+              enabled={theme === "cyber"}
+              onChange={(v) => {
+                setTheme(v ? "cyber" : "enterprise");
+                addToast(
+                  v ? "Тема Cyber Premier" : "Тема Enterprise Light",
+                  "info"
+                );
+              }}
+            />
           </SettingRow>
           <SettingRow label="Язык">
             <span className="text-sm text-slate-400">Русский</span>

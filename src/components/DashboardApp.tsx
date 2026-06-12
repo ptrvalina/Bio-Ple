@@ -12,27 +12,37 @@ import { FieldDetailDrawer } from "@/components/field/FieldDetailDrawer";
 import { useDashboardStore } from "@/store/dashboardStore";
 import { useAppStore } from "@/store/appStore";
 import { useDataStore } from "@/store/dataStore";
+import { useThemeStore } from "@/store/themeStore";
 import type { AppView } from "@/types/data";
 
-const MOBILE_NAV: { id: AppView; icon: typeof LayoutDashboard; label: string }[] = [
-  { id: "dashboard", icon: LayoutDashboard, label: "Дашборд" },
-  { id: "constructor", icon: Wrench, label: "Стол" },
-  { id: "settings", icon: Settings, label: "Ещё" },
+const MOBILE_NAV: {
+  id: AppView;
+  icon: typeof LayoutDashboard;
+  symbol: string;
+}[] = [
+  { id: "dashboard", icon: LayoutDashboard, symbol: "potted_plant" },
+  { id: "constructor", icon: Wrench, symbol: "precision_manufacturing" },
+  { id: "settings", icon: Settings, symbol: "settings" },
 ];
 
 function SplashScreen() {
   return (
-    <div className="flex h-[100dvh] flex-col items-center justify-center bg-surface">
+    <div className="flex h-[100dvh] flex-col items-center justify-center bg-background">
       <div className="relative mb-8">
-        <div className="h-20 w-20 animate-pulse rounded-2xl bg-gradient-to-br from-accent to-accent-dark shadow-glow" />
-        <div className="absolute inset-0 flex items-center justify-center text-3xl font-bold text-white">
-          BP
+        <div className="flex h-20 w-20 items-center justify-center rounded-lg border border-surface-border bg-surface-card shadow-glow">
+          <span className="material-symbols-outlined text-4xl text-accent">
+            monitor_heart
+          </span>
         </div>
       </div>
-      <h1 className="text-xl font-bold text-white">BioPole AgroPulse</h1>
-      <p className="mt-2 text-sm text-slate-500">Загрузка данных хозяйства...</p>
+      <h1 className="text-lg font-bold tracking-tighter text-foreground">
+        BIOPOLAR AGROPULSE
+      </h1>
+      <p className="label-caps mt-2 text-surface-muted">
+        Initializing field telemetry...
+      </p>
       <div className="mt-6 h-1 w-48 overflow-hidden rounded-full bg-surface-border">
-        <div className="h-full w-1/2 animate-pulse rounded-full bg-accent" />
+        <div className="h-full w-1/2 animate-pulse bg-accent" />
       </div>
     </div>
   );
@@ -46,14 +56,16 @@ export function DashboardApp() {
   const dataError = useDataStore((s) => s.error);
   const view = useAppStore((s) => s.view);
   const setView = useAppStore((s) => s.setView);
+  const initTheme = useThemeStore((s) => s.initialize);
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
+    initTheme();
     initialize();
     void bootstrap();
     const timer = setTimeout(() => setShowSplash(false), 900);
     return () => clearTimeout(timer);
-  }, [initialize, bootstrap]);
+  }, [initialize, bootstrap, initTheme]);
 
   const ready = dashboardReady && dataReady;
 
@@ -62,7 +74,7 @@ export function DashboardApp() {
   }
 
   return (
-    <div className="flex h-[100dvh] overflow-hidden">
+    <div className="flex h-[100dvh] overflow-hidden bg-background">
       <div className="hidden lg:flex">
         <AppSidebar />
       </div>
@@ -75,18 +87,30 @@ export function DashboardApp() {
           {view === "settings" && <SettingsView />}
         </main>
 
-        <nav className="flex border-t border-surface-border bg-surface-elevated pb-safe lg:hidden">
-          {MOBILE_NAV.map(({ id, icon: Icon, label }) => (
+        {/* Floating pill nav (Premier mobile) */}
+        <nav className="mobile-nav-pill fixed bottom-6 left-1/2 z-50 flex w-[90%] max-w-md -translate-x-1/2 items-center justify-around rounded-full px-6 py-3 pb-safe lg:hidden">
+          {MOBILE_NAV.map(({ id, symbol }) => (
             <button
               key={id}
               type="button"
               onClick={() => setView(id)}
-              className={`flex flex-1 flex-col items-center gap-0.5 py-2 pt-2.5 text-[10px] font-medium transition active:scale-95 ${
-                view === id ? "text-accent" : "text-slate-500"
+              className={`flex h-12 w-12 items-center justify-center rounded-full transition-all active:scale-90 ${
+                view === id
+                  ? "mobile-nav-active scale-110"
+                  : "text-surface-muted hover:text-accent"
               }`}
+              aria-label={id}
             >
-              <Icon className={`h-5 w-5 ${view === id ? "text-accent" : ""}`} />
-              {label}
+              <span
+                className="material-symbols-outlined"
+                style={
+                  view === id
+                    ? { fontVariationSettings: "'FILL' 1" }
+                    : undefined
+                }
+              >
+                {symbol}
+              </span>
             </button>
           ))}
         </nav>
@@ -96,7 +120,7 @@ export function DashboardApp() {
       <ToastContainer />
 
       {dataError && (
-        <div className="fixed bottom-20 left-1/2 z-50 -translate-x-1/2 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-2 text-xs text-red-300 lg:bottom-4">
+        <div className="fixed bottom-24 left-1/2 z-50 -translate-x-1/2 rounded border border-red-500/40 bg-red-500/10 px-4 py-2 text-xs text-red-400 lg:bottom-4">
           {dataError}
         </div>
       )}
