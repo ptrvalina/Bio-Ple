@@ -5,7 +5,6 @@ import {
   useEffect,
   useMemo,
   useState,
-  type ComponentType,
   type DragEvent,
 } from "react";
 import type { Layout, Layouts } from "react-grid-layout";
@@ -13,23 +12,7 @@ import { useDashboardStore } from "@/store/dashboardStore";
 import { useContainerWidth } from "@/hooks/useContainerWidth";
 import { WidgetShell } from "./WidgetShell";
 import { DRAG_TYPE } from "@/components/layout/Sidebar";
-
-function loadResponsiveComponent(): ComponentType<Record<string, unknown>> {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const rgl = require("react-grid-layout") as {
-    Responsive?: ComponentType<Record<string, unknown>>;
-    default?: { Responsive?: ComponentType<Record<string, unknown>> };
-  };
-  if (rgl.Responsive) return rgl.Responsive;
-  if (rgl.default?.Responsive) return rgl.default.Responsive;
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const direct = require("react-grid-layout/build/ResponsiveReactGridLayout") as {
-    default: ComponentType<Record<string, unknown>>;
-  };
-  return direct.default;
-}
-
-const Responsive = loadResponsiveComponent();
+import { Responsive } from "@/lib/reactGridLayout";
 
 const BREAKPOINTS = { lg: 1200, md: 768, sm: 0 };
 const COLS = { lg: 12, md: 6, sm: 1 };
