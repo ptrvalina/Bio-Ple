@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 
 /** Измеряет ширину контейнера через ResizeObserver (замена WidthProvider) */
-export function useContainerWidth(): {
+export function useContainerWidth(enabled = true): {
   containerRef: RefObject<HTMLDivElement>;
   width: number;
 } {
@@ -11,11 +11,14 @@ export function useContainerWidth(): {
   const [width, setWidth] = useState(0);
 
   useEffect(() => {
+    if (!enabled) return;
+
     const element = containerRef.current;
     if (!element) return;
 
     const updateWidth = () => {
-      setWidth(element.getBoundingClientRect().width);
+      const next = element.getBoundingClientRect().width;
+      setWidth((prev) => (prev !== next ? next : prev));
     };
 
     updateWidth();
@@ -24,7 +27,7 @@ export function useContainerWidth(): {
     observer.observe(element);
 
     return () => observer.disconnect();
-  }, []);
+  }, [enabled]);
 
   return { containerRef, width };
 }

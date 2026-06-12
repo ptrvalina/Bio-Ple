@@ -33,8 +33,8 @@ export function DashboardGrid({ mode }: DashboardGridProps) {
   const setWidgetWidth = useDashboardStore((s) => s.setWidgetWidth);
   const setDraggingFromSidebar = useDashboardStore((s) => s.setDraggingFromSidebar);
 
-  const { containerRef, width } = useContainerWidth();
   const [mounted, setMounted] = useState(false);
+  const { containerRef, width } = useContainerWidth(mounted);
   const [isDraggingItem, setIsDraggingItem] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -118,7 +118,15 @@ export function DashboardGrid({ mode }: DashboardGridProps) {
       onDrop={handleDrop}
       onDragOver={handleDragOver}
     >
-      {width > 0 && (
+      {widgets.length === 0 ? (
+        <div className="flex flex-1 flex-col items-center justify-center gap-3 py-20 text-center">
+          <p className="label-caps text-surface-muted">Рабочий стол пуст</p>
+          <p className="text-sm text-surface-muted">
+            Откройте «Constructor» и добавьте виджеты, или нажмите «Сбросить» в
+            конструкторе
+          </p>
+        </div>
+      ) : width > 0 ? (
         <Responsive
           className="layout"
           width={width}
@@ -139,6 +147,10 @@ export function DashboardGrid({ mode }: DashboardGridProps) {
         >
           {children}
         </Responsive>
+      ) : (
+        <div className="flex flex-1 items-center justify-center py-20 text-sm text-surface-muted">
+          Загрузка сетки...
+        </div>
       )}
     </div>
   );

@@ -69,14 +69,19 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   initialize: () => {
     if (get().initialized) return;
     const saved = loadDashboardConfig();
-    if (saved) {
+    const defaults = createDefaultState();
+
+    if (saved && saved.widgets.length > 0) {
       set({
         widgets: saved.widgets,
         layouts: saved.layouts,
         initialized: true,
       });
     } else {
-      set({ initialized: true });
+      set({ ...defaults, initialized: true });
+      if (!saved || saved.widgets.length === 0) {
+        saveDashboardConfig(defaults);
+      }
     }
   },
 
