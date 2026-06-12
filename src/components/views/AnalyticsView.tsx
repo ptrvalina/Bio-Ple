@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useActiveField } from "@/hooks/useActiveField";
 import { useDataStore } from "@/store/dataStore";
 
 const MAP_IMAGE =
@@ -9,9 +9,9 @@ const MAP_IMAGE =
 export function AnalyticsView() {
   const fields = useDataStore((s) => s.fields);
   const deviations = useDataStore((s) => s.deviations);
-  const [selectedId, setSelectedId] = useState(fields[0]?.id ?? "");
-
-  const selected = fields.find((f) => f.id === selectedId) ?? fields[0];
+  const selectedFieldId = useDataStore((s) => s.selectedFieldId);
+  const selectField = useDataStore((s) => s.selectField);
+  const selected = useActiveField();
 
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:grid lg:grid-cols-12 lg:grid-rows-6 lg:gap-px lg:bg-white/10">
@@ -19,12 +19,12 @@ export function AnalyticsView() {
         <h3 className="label-caps mb-4 text-accent">ACTIVE SECTORS</h3>
         <div className="space-y-3">
           {fields.map((field) => {
-            const active = field.id === selectedId;
+            const active = field.id === selectedFieldId;
             return (
               <button
                 key={field.id}
                 type="button"
-                onClick={() => setSelectedId(field.id)}
+                onClick={() => void selectField(field.id)}
                 className={`w-full p-3 text-left transition ${
                   active
                     ? "border-l-2 border-accent bg-accent/5"
@@ -100,7 +100,10 @@ export function AnalyticsView() {
         <div className="flex-1 p-4">
           <p className="label-caps mb-3 text-surface-muted">PLAN / FACT DEVIATIONS</p>
           <div className="space-y-2">
-            {deviations.slice(0, 5).map((d) => (
+            {deviations
+              .filter((d) => !selected || d.field === selected.name)
+              .slice(0, 5)
+              .map((d) => (
               <div
                 key={d.id}
                 className="border border-white/10 bg-surface-hover/30 p-3"
@@ -119,9 +122,16 @@ export function AnalyticsView() {
         <h3 className="label-caps mb-4 text-surface-muted">SPECTRAL ANALYSIS FEED</h3>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {fields.map((f) => (
-            <div key={f.id} className="premier-glass p-4">
+            <button
+              key={f.id}
+              type="button"
+              onClick={() => void selectField(f.id)}
+              className={`premier-glass p-4 text-left transition ${
+                selectedFieldId === f.id ? "ring-1 ring-accent" : "hover:bg-surface-hover/20"
+              }`}
+            >
               <p className="font-semibold">{f.name}</p>
-              <div className="mt-2 h-16 flex items-end gap-1">
+              <div className="mt-2 flex h-16 items-end gap-1">
                 {[40, 55, 80, 65, 90, 75, 60].map((h, i) => (
                   <div
                     key={i}
@@ -133,7 +143,7 @@ export function AnalyticsView() {
               <p className="font-data-sm mt-2 text-accent">
                 NDVI trend · {f.analysis.growthStage}
               </p>
-            </div>
+            </button>
           ))}
         </div>
       </section>

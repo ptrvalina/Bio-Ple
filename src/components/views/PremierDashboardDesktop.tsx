@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useActiveField } from "@/hooks/useActiveField";
+import { navigateToAlert } from "@/lib/navigation";
 import { useDataStore } from "@/store/dataStore";
 
 const MAP_IMAGE =
@@ -54,9 +56,10 @@ function useClock() {
 
 export function PremierDashboardDesktop() {
   const weather = useDataStore((s) => s.weather);
-  const fields = useDataStore((s) => s.fields);
   const alerts = useDataStore((s) => s.alerts);
-  const activeField = fields[0];
+  const dismissAlert = useDataStore((s) => s.dismissAlert);
+  const selectField = useDataStore((s) => s.selectField);
+  const activeField = useActiveField();
   const clock = useClock();
   const [logs, setLogs] = useState(INITIAL_LOGS);
 
@@ -71,6 +74,7 @@ export function PremierDashboardDesktop() {
   }, []);
 
   const hasFrostAlert = alerts.some((a) => a.severity === "danger");
+  const frostAlert = alerts.find((a) => a.severity === "danger");
 
   return (
     <div className="flex min-h-0 flex-1 gap-4 overflow-hidden bg-[#05080f] p-4 lg:p-8">
@@ -92,7 +96,15 @@ export function PremierDashboardDesktop() {
           bars={[1, 1, 0.3, 0.3]}
         />
         {hasFrostAlert && (
-          <div className="premier-pulse-border relative overflow-hidden border border-red-400/30 bg-red-500/10 p-4 backdrop-blur-xl">
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={() => frostAlert && navigateToAlert(frostAlert.id)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && frostAlert) navigateToAlert(frostAlert.id);
+            }}
+            className="premier-pulse-border relative cursor-pointer overflow-hidden border border-red-400/30 bg-red-500/10 p-4 backdrop-blur-xl"
+          >
             <div className="absolute left-0 top-0 h-full w-0.5 bg-red-400" />
             <div className="mb-2 flex items-start justify-between">
               <span className="label-caps text-red-400">CRITICAL FROST RISK</span>
@@ -109,9 +121,13 @@ export function PremierDashboardDesktop() {
             </p>
             <button
               type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (frostAlert) void dismissAlert(frostAlert.id);
+              }}
               className="label-caps mt-4 w-full bg-red-400 py-2 text-[9px] text-red-950 hover:opacity-90"
             >
-              ENGAGE HEATERS
+              ПОДТВЕРДИТЬ АЛЕРТ
             </button>
           </div>
         )}
@@ -144,7 +160,15 @@ export function PremierDashboardDesktop() {
           <div className="premier-scanline" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-80" />
 
-          <div className="absolute left-6 top-6 z-20 border border-white/20 bg-background/60 p-4 backdrop-blur-md">
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={() => activeField && void selectField(activeField.id)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && activeField) void selectField(activeField.id);
+            }}
+            className="absolute left-6 top-6 z-20 cursor-pointer border border-white/20 bg-background/60 p-4 backdrop-blur-md transition hover:border-accent/40"
+          >
             <div className="mb-2 flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-accent shadow-glow" />
               <span className="label-caps">{activeField?.name?.toUpperCase() ?? "ПОЛЕ 3"}</span>

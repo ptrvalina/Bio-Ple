@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertTriangle, Check, CloudOff } from "lucide-react";
+import { navigateToAlert, navigateToOperations } from "@/lib/navigation";
 import { useDataStore } from "@/store/dataStore";
 import type { Alert } from "@/types/data";
 
@@ -36,7 +37,13 @@ export function AlertsWidget() {
       {alerts.map((alert) => (
         <div
           key={alert.id}
-          className={`rounded-lg border p-2.5 ${
+          role="button"
+          tabIndex={0}
+          onClick={() => navigateToOperations()}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") navigateToOperations();
+          }}
+          className={`cursor-pointer rounded-lg border p-2.5 transition hover:brightness-110 ${
             alert.severity === "danger"
               ? "border-red-500/30 bg-red-500/10"
               : alert.severity === "warning"
@@ -53,10 +60,23 @@ export function AlertsWidget() {
               </p>
               <button
                 type="button"
-                onClick={() => void dismissAlert(alert.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  void dismissAlert(alert.id);
+                }}
                 className="mt-2 rounded-md bg-surface-hover px-2 py-1 text-[10px] text-slate-300 transition hover:bg-accent/20 hover:text-accent"
               >
                 Подтвердить
+              </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigateToAlert(alert.id);
+                }}
+                className="ml-2 mt-2 rounded-md bg-accent/15 px-2 py-1 text-[10px] text-accent transition hover:bg-accent/25"
+              >
+                Открыть
               </button>
             </div>
           </div>

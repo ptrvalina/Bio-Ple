@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MaterialSymbols } from "@/components/ui/MaterialSymbols";
+import { useAuthStore } from "@/store/authStore";
 
 const STEPS = [
   {
@@ -28,11 +29,46 @@ const SECTORS = [
 
 export function RegisterPageContent() {
   const router = useRouter();
+  const register = useAuthStore((s) => s.register);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [step, setStep] = useState(1);
+  const [operatorName, setOperatorName] = useState("");
+  const [operatorId, setOperatorId] = useState("");
   const [selectedSector, setSelectedSector] = useState("field-3");
   const [access, setAccess] = useState({ telemetry: true, climate: true, emergency: false });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const finish = () => router.push("/");
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace("/");
+    }
+  }, [isAuthenticated, router]);
+
+  const finish = async () => {
+    if (!operatorName.trim() || !operatorId.trim()) {
+      setError("Заполните имя и ID жетона на шаге 1");
+      setStep(1);
+      return;
+    }
+
+    const clearanceLevel = access.emergency ? 5 : access.climate ? 4 : 3;
+
+    setLoading(true);
+    const ok = await register({
+      operatorName,
+      operatorId,
+      defaultFieldId: selectedSector,
+      clearanceLevel,
+    });
+    setLoading(false);
+
+    if (ok) {
+      router.push("/");
+    } else {
+      setError("Не удалось завершить регистрацию");
+    }
+  };
 
   return (
     <div className="relative flex min-h-[100dvh] overflow-hidden bg-background">
@@ -94,6 +130,8 @@ export function RegisterPageContent() {
                     className="w-full border-b border-white/20 bg-transparent py-2 font-data-lg text-foreground outline-none focus:border-accent"
                     placeholder="ИВАНОВ И.И."
                     type="text"
+                    value={operatorName}
+                    onChange={(e) => setOperatorName(e.target.value)}
                   />
                 </label>
                 <label className="block">
@@ -102,6 +140,8 @@ export function RegisterPageContent() {
                     className="w-full border-b border-white/20 bg-transparent py-2 font-data-lg text-foreground outline-none focus:border-accent"
                     placeholder="AGRO-992-PX"
                     type="text"
+                    value={operatorId}
+                    onChange={(e) => setOperatorId(e.target.value)}
                   />
                 </label>
               </div>
@@ -204,6 +244,10 @@ export function RegisterPageContent() {
             </div>
           )}
 
+          {error && (
+            <p className="mt-4 font-data-sm text-sm text-red-400">{error}</p>
+          )}
+
           <div className="mt-8 flex items-center justify-between border-t border-white/10 pt-8">
             <button
               type="button"
@@ -217,10 +261,11 @@ export function RegisterPageContent() {
             </button>
             <button
               type="button"
-              onClick={() => (step < 3 ? setStep((s) => s + 1) : finish())}
-              className="label-caps flex items-center gap-3 bg-accent px-8 py-3 font-bold tracking-widest text-[#00210e] transition hover:brightness-110 active:scale-95"
+              disabled={loading}
+              onClick={() => (step < 3 ? setStep((s) => s + 1) : void finish())}
+              className="label-caps flex items-center gap-3 bg-accent px-8 py-3 font-bold tracking-widest text-[#00210e] transition hover:brightness-110 active:scale-95 disabled:opacity-70"
             >
-              {step === 3 ? "ЗАВЕРШИТЬ" : "ДАЛЕЕ"}
+              {loading ? "РЕГИСТРАЦИЯ..." : step === 3 ? "ЗАВЕРШИТЬ" : "ДАЛЕЕ"}
               <span className="material-symbols-outlined text-sm">trending_flat</span>
             </button>
           </div>

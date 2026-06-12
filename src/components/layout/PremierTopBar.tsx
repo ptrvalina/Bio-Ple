@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { viewTitle } from "@/config/premierNav";
 import { useAppStore } from "@/store/appStore";
+import { useAuthStore } from "@/store/authStore";
 import { useDataStore } from "@/store/dataStore";
 import { useToastStore } from "@/store/toastStore";
 import { downloadReport } from "@/lib/exportReport";
@@ -31,6 +32,8 @@ export function PremierTopBar() {
   const widgets = useDashboardStore((s) => s.widgets);
   const layouts = useDashboardStore((s) => s.layouts);
   const addToast = useToastStore((s) => s.addToast);
+  const operatorName = useAuthStore((s) => s.operatorName);
+  const clearanceLevel = useAuthStore((s) => s.clearanceLevel);
   const now = useLiveClock();
 
   const onlineServices = serviceHealth.filter((s) => s.status === "online").length;
@@ -74,7 +77,7 @@ export function PremierTopBar() {
             >
               security
             </span>
-            <span className="label-caps text-accent">Clearance: Level 4</span>
+            <span className="label-caps text-accent">Clearance: Level {clearanceLevel}</span>
           </div>
         )}
       </div>
@@ -133,7 +136,7 @@ export function PremierTopBar() {
         <div className="flex items-center gap-3 border-l border-white/10 pl-4 sm:pl-6">
           <div className="hidden text-right sm:block">
             <p className="label-caps text-[10px] leading-none text-foreground">
-              ИВАНОВ А.С.
+              {operatorName || "ИВАНОВ А.С."}
             </p>
             <p className="font-data text-[10px] text-accent">LEAD OPERATOR</p>
           </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useActiveField } from "@/hooks/useActiveField";
 import { useDataStore } from "@/store/dataStore";
 
 const SAT_IMAGE =
@@ -8,6 +9,19 @@ const SAT_IMAGE =
 export function OperationsView() {
   const operations = useDataStore((s) => s.operations);
   const fields = useDataStore((s) => s.fields);
+  const selectedFieldId = useDataStore((s) => s.selectedFieldId);
+  const selectedOperationId = useDataStore((s) => s.selectedOperationId);
+  const selectField = useDataStore((s) => s.selectField);
+  const selectOperation = useDataStore((s) => s.selectOperation);
+  const activeField = useActiveField();
+
+  const filteredOps = activeField
+    ? operations.filter((op) => op.field === activeField.name)
+    : operations;
+
+  const handleRowClick = (opId: string) => {
+    selectOperation(selectedOperationId === opId ? null : opId);
+  };
 
   return (
     <div className="grid min-h-0 flex-1 grid-cols-1 overflow-hidden lg:grid-cols-12">
@@ -42,7 +56,29 @@ export function OperationsView() {
                   <p className="font-data-lg">{fields.length}</p>
                 </div>
               </div>
+              {activeField && (
+                <p className="font-data-sm mt-3 text-accent">
+                  Фильтр: {activeField.name}
+                </p>
+              )}
             </div>
+          </div>
+
+          <div className="absolute bottom-4 left-4 flex flex-wrap gap-2 sm:bottom-8">
+            {fields.map((field) => (
+              <button
+                key={field.id}
+                type="button"
+                onClick={() => void selectField(field.id)}
+                className={`label-caps rounded border px-2 py-1 text-[10px] transition ${
+                  selectedFieldId === field.id
+                    ? "border-accent bg-accent/20 text-accent"
+                    : "border-white/20 bg-background/60 text-surface-muted hover:text-foreground"
+                }`}
+              >
+                {field.name}
+              </button>
+            ))}
           </div>
 
           <div className="absolute bottom-4 right-4 flex flex-col gap-2 sm:bottom-8 sm:right-8">
@@ -61,10 +97,16 @@ export function OperationsView() {
         <section className="h-48 shrink-0 overflow-y-auto border-t border-white/10 bg-surface-elevated/80 p-4">
           <h3 className="label-caps mb-3 text-surface-muted">MISSION QUEUE</h3>
           <div className="space-y-2">
-            {operations.slice(0, 5).map((op) => (
-              <div
+            {filteredOps.slice(0, 5).map((op) => (
+              <button
                 key={op.id}
-                className="flex items-center justify-between border border-white/10 bg-surface-hover/30 px-4 py-2"
+                type="button"
+                onClick={() => handleRowClick(op.id)}
+                className={`flex w-full items-center justify-between border px-4 py-2 text-left transition ${
+                  selectedOperationId === op.id
+                    ? "border-accent/40 bg-accent/10"
+                    : "border-white/10 bg-surface-hover/30 hover:bg-surface-hover/50"
+                }`}
               >
                 <div>
                   <p className="text-sm">{op.product}</p>
@@ -73,7 +115,7 @@ export function OperationsView() {
                   </p>
                 </div>
                 <span className="label-caps text-accent">{op.status}</span>
-              </div>
+              </button>
             ))}
           </div>
         </section>
@@ -113,8 +155,14 @@ export function OperationsView() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/10">
-              {operations.map((op) => (
-                <tr key={op.id} className="hover:bg-surface-hover/20">
+              {filteredOps.map((op) => (
+                <tr
+                  key={op.id}
+                  onClick={() => handleRowClick(op.id)}
+                  className={`cursor-pointer hover:bg-surface-hover/20 ${
+                    selectedOperationId === op.id ? "bg-accent/10" : ""
+                  }`}
+                >
                   <td className="py-2">{op.date}</td>
                   <td className="py-2">{op.field}</td>
                   <td className="py-2 text-right text-accent">{op.status}</td>

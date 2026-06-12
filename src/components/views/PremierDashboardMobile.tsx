@@ -1,5 +1,7 @@
 "use client";
 
+import { useActiveField } from "@/hooks/useActiveField";
+import { navigateToOperations } from "@/lib/navigation";
 import { useDataStore } from "@/store/dataStore";
 
 const HERO_IMAGE =
@@ -9,8 +11,10 @@ export function PremierDashboardMobile() {
   const fields = useDataStore((s) => s.fields);
   const weather = useDataStore((s) => s.weather);
   const operations = useDataStore((s) => s.operations);
+  const selectedFieldId = useDataStore((s) => s.selectedFieldId);
   const selectField = useDataStore((s) => s.selectField);
-  const activeField = fields[0];
+  const selectOperation = useDataStore((s) => s.selectOperation);
+  const activeField = useActiveField();
 
   return (
     <div className="flex min-h-0 flex-1 flex-col overflow-y-auto pb-28">
@@ -88,11 +92,15 @@ export function PremierDashboardMobile() {
       </section>
 
       <section className="mx-4 mt-6 grid grid-cols-2 gap-3">
-        {fields.map((field) => (
+        {fields.map((field) => {
+          const isSelected = selectedFieldId === field.id;
+          return (
           <button
             key={field.id}
             type="button"
-            className="premier-glass-premier p-4 text-left"
+            className={`premier-glass-premier p-4 text-left transition ${
+              isSelected ? "ring-1 ring-accent shadow-glow" : ""
+            }`}
             onClick={() => void selectField(field.id)}
           >
             <span className="label-caps text-[9px] text-surface-muted">{field.crop}</span>
@@ -100,16 +108,22 @@ export function PremierDashboardMobile() {
             <p className="font-data-sm mt-2 text-accent">NDVI {field.analysis.ndvi.toFixed(2)}</p>
             <p className="font-data-sm text-[10px] text-surface-muted">{field.area} га</p>
           </button>
-        ))}
+          );
+        })}
       </section>
 
       <section className="mx-4 mt-6 premier-glass p-4">
         <h3 className="label-caps mb-4 text-surface-muted">RECENT OPERATIONS</h3>
         <div className="space-y-3">
           {operations.slice(0, 4).map((op) => (
-            <div
+            <button
               key={op.id}
-              className="flex items-center justify-between border-b border-white/5 pb-2 last:border-0"
+              type="button"
+              onClick={() => {
+                selectOperation(op.id);
+                navigateToOperations(op.id);
+              }}
+              className="flex w-full items-center justify-between border-b border-white/5 pb-2 text-left last:border-0 hover:bg-surface-hover/20"
             >
               <div>
                 <p className="text-sm">{op.product}</p>
@@ -118,7 +132,7 @@ export function PremierDashboardMobile() {
                 </p>
               </div>
               <span className="label-caps text-[9px] text-accent">{op.status}</span>
-            </div>
+            </button>
           ))}
         </div>
       </section>

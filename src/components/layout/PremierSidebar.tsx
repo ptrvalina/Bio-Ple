@@ -1,17 +1,25 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { PREMIER_NAV } from "@/config/premierNav";
 import { useAppStore } from "@/store/appStore";
+import { useAuthStore } from "@/store/authStore";
 import { useDataStore } from "@/store/dataStore";
 import type { AppView } from "@/types/data";
 
 export function PremierSidebar() {
+  const router = useRouter();
   const view = useAppStore((s) => s.view);
   const setView = useAppStore((s) => s.setView);
   const fields = useDataStore((s) => s.fields);
   const selectedFieldId = useDataStore((s) => s.selectedFieldId);
   const selectField = useDataStore((s) => s.selectField);
+  const logout = useAuthStore((s) => s.logout);
+
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
 
   return (
     <aside className="fixed left-0 top-0 z-50 flex h-screen w-64 flex-col border-r border-white/10 bg-surface-elevated/15 py-8 shadow-panel backdrop-blur-xl">
@@ -99,13 +107,14 @@ export function PremierSidebar() {
             <span className="material-symbols-outlined text-lg">terminal</span>
             <span className="label-caps">Logs</span>
           </button>
-          <Link
-            href="/login"
+          <button
+            type="button"
+            onClick={handleLogout}
             className="flex w-full items-center gap-3 px-4 py-2 text-surface-muted transition hover:text-foreground"
           >
             <span className="material-symbols-outlined text-lg">logout</span>
             <span className="label-caps">Выход</span>
-          </Link>
+          </button>
         </div>
       </div>
     </aside>

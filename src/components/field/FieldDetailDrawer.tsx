@@ -20,6 +20,7 @@ export function FieldDetailDrawer() {
   const fieldDrawerOpen = useDataStore((s) => s.fieldDrawerOpen);
   const closeFieldDrawer = useDataStore((s) => s.closeFieldDrawer);
   const fieldOperations = useDataStore((s) => s.fieldOperations);
+  const techMap = useDataStore((s) => s.techMap);
 
   const [mounted, setMounted] = useState(false);
 
@@ -136,6 +137,27 @@ export function FieldDetailDrawer() {
                         </p>
                         <p className="font-data-sm mt-1 text-accent">{field.analysis.healthLabel}</p>
                       </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 border border-white/10 bg-surface-elevated p-4 sm:p-6">
+                  <h3 className="label-caps mb-4 text-surface-muted">Технологическая карта</h3>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div>
+                      <p className="font-data-sm text-surface-muted">Ближайшая операция</p>
+                      <p className="text-lg font-semibold">{techMap.nextOperation}</p>
+                    </div>
+                    <div>
+                      <p className="font-data-sm text-surface-muted">Дата / норма</p>
+                      <p className="font-data-lg text-accent">
+                        {techMap.nextDate} · {techMap.norm}
+                      </p>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <span className="label-caps rounded-full border border-accent/20 bg-accent/10 px-3 py-1 text-accent">
+                        {techMap.statusLabel}
+                      </span>
                     </div>
                   </div>
                 </div>

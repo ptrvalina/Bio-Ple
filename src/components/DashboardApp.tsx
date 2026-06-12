@@ -12,6 +12,7 @@ import { OperationsView } from "@/components/views/OperationsView";
 import { SettingsView } from "@/components/views/SettingsView";
 import { FieldDetailDrawer } from "@/components/field/FieldDetailDrawer";
 import { PREMIER_MOBILE_NAV, PREMIER_NAV } from "@/config/premierNav";
+import { useAuthStore } from "@/store/authStore";
 import { useDashboardStore } from "@/store/dashboardStore";
 import { useAppStore } from "@/store/appStore";
 import { useDataStore } from "@/store/dataStore";
@@ -54,9 +55,18 @@ export function DashboardApp() {
   useEffect(() => {
     initTheme();
     initialize();
-    void bootstrap();
+    void bootstrap().then(() => {
+      const defaultFieldId = useAuthStore.getState().defaultFieldId;
+      if (defaultFieldId) {
+        void useDataStore.getState().selectField(defaultFieldId);
+      }
+    });
+    const stopPolling = useDataStore.getState().startWeatherPolling();
     const timer = setTimeout(() => setShowSplash(false), 900);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      stopPolling();
+    };
   }, [initialize, bootstrap, initTheme]);
 
   const ready = dashboardReady && dataReady;

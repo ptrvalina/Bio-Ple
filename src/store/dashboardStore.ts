@@ -10,6 +10,18 @@ import {
   repairDashboardConfig,
   saveDashboardConfig,
 } from "@/lib/storage";
+import { useAppStore } from "@/store/appStore";
+
+let autoSaveTimer: ReturnType<typeof setTimeout> | null = null;
+
+function scheduleAutoSave(): void {
+  const autoSave = useAppStore.getState().autoSaveDashboard;
+  if (!autoSave) return;
+  if (autoSaveTimer) clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(() => {
+    useDashboardStore.getState().saveConfig();
+  }, 500);
+}
 
 interface DashboardState {
   widgets: DashboardWidget[];
@@ -125,6 +137,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       widgets: [...widgets, newWidget],
       layouts: newLayouts,
     });
+    scheduleAutoSave();
   },
 
   removeWidget: (id: string) => {
@@ -145,6 +158,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
         removingIds: state.removingIds.filter((rid) => rid !== id),
       };
     });
+    scheduleAutoSave();
   },
 
   setWidgetWidth: (id: string, width: number) => {
@@ -157,10 +171,12 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       const layouts = syncLayoutWidths(state.layouts, widgets);
       return { widgets, layouts };
     });
+    scheduleAutoSave();
   },
 
   updateLayouts: (layouts: Layouts) => {
     set({ layouts });
+    scheduleAutoSave();
   },
 
   setDraggingFromSidebar: (value: boolean) => {

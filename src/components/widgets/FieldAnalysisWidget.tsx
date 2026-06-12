@@ -7,6 +7,7 @@ import {
   TestTube,
   Wheat,
 } from "lucide-react";
+import { useActiveField } from "@/hooks/useActiveField";
 import { useDataStore } from "@/store/dataStore";
 import type { FieldHealth } from "@/types/data";
 
@@ -56,7 +57,12 @@ export function FieldAnalysisWidget() {
   const selectedFieldId = useDataStore((s) => s.selectedFieldId);
   const selectField = useDataStore((s) => s.selectField);
 
-  const field = fields.find((f) => f.id === selectedFieldId) ?? fields[0];
+  const field = useActiveField();
+  if (!field) {
+    return (
+      <p className="py-8 text-center text-sm text-slate-500">Нет данных по полям</p>
+    );
+  }
   const a = field.analysis;
 
   return (
@@ -69,7 +75,7 @@ export function FieldAnalysisWidget() {
             type="button"
             onClick={() => void selectField(f.id)}
             className={`rounded-md px-2 py-1 text-[10px] font-medium transition ${
-              field.id === f.id
+              selectedFieldId === f.id
                 ? "bg-accent text-white"
                 : "bg-surface-hover text-slate-400 hover:text-white"
             }`}

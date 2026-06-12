@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ServiceHealthPanel } from "@/components/platform/ServiceHealthPanel";
+import { useAppStore } from "@/store/appStore";
+import { useAuthStore } from "@/store/authStore";
 import { useDataStore } from "@/store/dataStore";
 import { useThemeStore } from "@/store/themeStore";
 import { useToastStore } from "@/store/toastStore";
@@ -33,14 +35,34 @@ function Toggle({
 }
 
 export function SettingsView() {
+  const router = useRouter();
   const addToast = useToastStore((s) => s.addToast);
   const fields = useDataStore((s) => s.fields);
+  const refreshAll = useDataStore((s) => s.refreshAll);
+  const isSyncing = useDataStore((s) => s.isSyncing);
   const theme = useThemeStore((s) => s.theme);
-  const setTheme = useThemeStore((s) => s.setTheme);
-  const [alerts, setAlerts] = useState(true);
-  const [weather, setWeather] = useState(true);
-  const [autoSave, setAutoSave] = useState(false);
-  const [operatorName, setOperatorName] = useState("ИВАНОВ_А_С");
+  const setThemeStore = useThemeStore((s) => s.setTheme);
+  const setThemeApp = useAppStore((s) => s.setTheme);
+  const alertsNotifications = useAppStore((s) => s.alertsNotifications);
+  const weatherNotifications = useAppStore((s) => s.weatherNotifications);
+  const autoSaveDashboard = useAppStore((s) => s.autoSaveDashboard);
+  const setAlertsNotifications = useAppStore((s) => s.setAlertsNotifications);
+  const setWeatherNotifications = useAppStore((s) => s.setWeatherNotifications);
+  const setAutoSaveDashboard = useAppStore((s) => s.setAutoSaveDashboard);
+  const operatorName = useAuthStore((s) => s.operatorName);
+  const setOperatorName = useAuthStore((s) => s.setOperatorName);
+  const logout = useAuthStore((s) => s.logout);
+
+  const handleSync = async () => {
+    addToast("Синхронизация с микросервисами...", "info");
+    await refreshAll();
+    addToast("Данные обновлены", "success");
+  };
+
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
 
   return (
     <div className="flex-1 overflow-y-auto">
@@ -126,7 +148,9 @@ export function SettingsView() {
                 <Toggle
                   enabled={theme === "cyber"}
                   onChange={(v) => {
-                    setTheme(v ? "cyber" : "enterprise");
+                    const next = v ? "cyber" : "enterprise";
+                    setThemeStore(next);
+                    setThemeApp(next);
                     addToast(v ? "Тема Cyber Premier" : "Тема Enterprise Light", "info");
                   }}
                 />
@@ -147,16 +171,22 @@ export function SettingsView() {
                   <p className="text-xs text-surface-muted">План/факт и нормы</p>
                 </div>
                 <Toggle
-                  enabled={alerts}
+                  enabled={alertsNotifications}
                   onChange={(v) => {
-                    setAlerts(v);
+                    setAlertsNotifications(v);
                     addToast(v ? "Алерты включены" : "Алерты отключены", "info");
                   }}
                 />
               </div>
               <div className="flex items-center justify-between">
                 <p className="text-sm">Погодные предупреждения</p>
-                <Toggle enabled={weather} onChange={setWeather} />
+                <Toggle
+                  enabled={weatherNotifications}
+                  onChange={(v) => {
+                    setWeatherNotifications(v);
+                    addToast(v ? "Погода: уведомления вкл." : "Погода: уведомления выкл.", "info");
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -175,13 +205,44 @@ export function SettingsView() {
               </div>
               <div className="flex items-center justify-between">
                 <p className="text-sm">Автосохранение дашборда</p>
-                <Toggle enabled={autoSave} onChange={setAutoSave} />
+                <Toggle
+                  enabled={autoSaveDashboard}
+                  onChange={(v) => {
+                    setAutoSaveDashboard(v);
+                    addToast(v ? "Автосохранение включено" : "Автосохранение выключено", "info");
+                  }}
+                />
+              </div>
+              <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-4">
+                <div>
+                  <p className="text-sm">Синхронизация платформы</p>
+                  <p className="text-xs text-surface-muted">Обновить все микросервисы</p>
+                </div>
+                <button
+                  type="button"
+                  disabled={isSyncing}
+                  onClick={() => void handleSync()}
+                  className="label-caps shrink-0 rounded bg-accent/15 px-4 py-2 text-accent transition hover:bg-accent/25 disabled:opacity-60"
+                >
+                  {isSyncing ? "Синхр..." : "Sync now"}
+                </button>
               </div>
             </div>
           </div>
 
           <div className="col-span-12">
             <ServiceHealthPanel />
+          </div>
+
+          <div className="col-span-12 flex justify-end">
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="label-caps flex items-center gap-2 rounded border border-red-500/30 bg-red-500/10 px-6 py-3 text-red-400 transition hover:bg-red-500/20"
+            >
+              <span className="material-symbols-outlined text-sm">logout</span>
+              Завершить сессию
+            </button>
           </div>
         </div>
       </div>

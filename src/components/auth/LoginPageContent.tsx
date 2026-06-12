@@ -2,20 +2,44 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { MaterialSymbols } from "@/components/ui/MaterialSymbols";
+import { useAuthStore } from "@/store/authStore";
 
 export function LoginPageContent() {
   const router = useRouter();
+  const login = useAuthStore((s) => s.login);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const [operatorId, setOperatorId] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [scanFast, setScanFast] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: FormEvent) => {
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace("/");
+    }
+  }, [isAuthenticated, router]);
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setError("");
+
+    if (!operatorId.trim() || !password.trim()) {
+      setError("Заполните ID оператора и ключ шифрования");
+      return;
+    }
+
     setLoading(true);
-    setTimeout(() => {
+    const ok = await login(operatorId, password);
+    setLoading(false);
+
+    if (ok) {
       router.push("/");
-    }, 1500);
+    } else {
+      setError("Неверные учётные данные");
+    }
   };
 
   return (
@@ -91,6 +115,8 @@ export function LoginPageContent() {
                   className="w-full border-b border-white/20 bg-transparent py-2 font-data-lg text-accent outline-none placeholder:text-white/20 focus:border-accent focus:ring-0"
                   placeholder="OP_ID_0000"
                   type="text"
+                  value={operatorId}
+                  onChange={(e) => setOperatorId(e.target.value)}
                   onFocus={() => setScanFast(true)}
                   onBlur={() => setScanFast(false)}
                 />
@@ -107,6 +133,8 @@ export function LoginPageContent() {
                   className="w-full border-b border-white/20 bg-transparent py-2 font-data-lg text-accent outline-none placeholder:text-white/20 focus:border-accent focus:ring-0"
                   placeholder="••••••••••••"
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   onFocus={() => setScanFast(true)}
                   onBlur={() => setScanFast(false)}
                 />
@@ -115,6 +143,10 @@ export function LoginPageContent() {
                 </span>
               </div>
             </div>
+
+            {error && (
+              <p className="font-data-sm text-sm text-red-400">{error}</p>
+            )}
 
             <button
               type="submit"

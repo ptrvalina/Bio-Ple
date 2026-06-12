@@ -5,6 +5,7 @@ import { useDataStore } from "@/store/dataStore";
 
 export function TechMapWidget() {
   const techMap = useDataStore((s) => s.techMap);
+  const openFieldDrawer = useDataStore((s) => s.openFieldDrawer);
   const onTrack = techMap.status === "on-track";
 
   return (
@@ -59,6 +60,7 @@ export function TechMapWidget() {
 
       <button
         type="button"
+        onClick={openFieldDrawer}
         className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-surface-border-light py-2.5 text-xs text-slate-500 transition hover:border-accent/40 hover:text-accent"
       >
         Открыть полную технологическую карту
