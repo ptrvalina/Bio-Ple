@@ -24,11 +24,22 @@ npm run dev
 
 Next.js 14 · TypeScript · Tailwind CSS · Zustand · Framer Motion · react-grid-layout
 
-## Деплой
+## Публичная ссылка (деплой за 2 минуты)
+
+1. Откройте [vercel.com/new](https://vercel.com/new)
+2. Импортируйте репозиторий **ptrvalina/Bio-Ple**
+3. Нажмите **Deploy** — Vercel выдаст ссылку вида `https://bio-ple-xxx.vercel.app`
+
+Или из терминала:
+
+```bash
+npx vercel login
+npx vercel deploy --prod
+```
+
+## Локальная сборка
 
 ```bash
 npm run build
 npm start
 ```
-
-Подходит для Vercel / любого Node.js хостинга.
