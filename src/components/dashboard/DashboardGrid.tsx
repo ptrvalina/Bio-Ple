@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import {
   useCallback,
   useEffect,
@@ -13,10 +14,12 @@ import { useAppStore } from "@/store/appStore";
 import { useContainerWidth } from "@/hooks/useContainerWidth";
 import { WidgetShell } from "./WidgetShell";
 import { DRAG_TYPE } from "@/components/layout/Sidebar";
-import { Responsive } from "@/lib/reactGridLayout";
 
-const BREAKPOINTS = { lg: 1200, md: 768, sm: 0 };
-const COLS = { lg: 12, md: 6, sm: 1 };
+const DashboardResponsiveGrid = dynamic(
+  () =>
+    import("./DashboardResponsiveGrid").then((m) => m.DashboardResponsiveGrid),
+  { ssr: false }
+);
 
 interface DashboardGridProps {
   mode: "view" | "edit";
@@ -138,24 +141,15 @@ export function DashboardGrid({ mode }: DashboardGridProps) {
           </div>
         </div>
       ) : gridWidth ? (
-        <Responsive
-          className="layout"
+        <DashboardResponsiveGrid
           width={gridWidth}
           layouts={layouts}
-          breakpoints={BREAKPOINTS}
-          cols={COLS}
-          rowHeight={60}
-          margin={[16, 16]}
-          containerPadding={[0, 0]}
+          isEdit={isEdit}
+          isMobile={isMobile}
           onLayoutChange={handleLayoutChange}
-          draggableHandle={isEdit ? ".widget-drag-handle" : undefined}
-          isDraggable={isEdit && !isMobile}
-          isResizable={false}
-          compactType="vertical"
-          useCSSTransforms
         >
           {children}
-        </Responsive>
+        </DashboardResponsiveGrid>
       ) : (
         <div className="flex min-h-[360px] flex-col gap-4">
           <p className="text-center text-sm text-surface-muted">Загрузка сетки...</p>
