@@ -13,6 +13,7 @@ import {
   FileSpreadsheet,
   GitCompare,
   BarChart2,
+  RefreshCw,
   type LucideIcon,
 } from "lucide-react";
 import type { DashboardWidget } from "@/types/widget";
@@ -28,6 +29,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   FileSpreadsheet,
   GitCompare,
   BarChart2,
+  RefreshCw,
 };
 
 interface WidgetShellProps {

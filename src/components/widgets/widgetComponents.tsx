@@ -7,6 +7,7 @@ import { OperationsLogWidget } from "./OperationsLogWidget";
 import { AlertsWidget } from "./AlertsWidget";
 import { TechMapWidget } from "./TechMapWidget";
 import { PlanFactWidget } from "./PlanFactWidget";
+import { ActivityTimelineWidget } from "./ActivityTimelineWidget";
 
 /**
  * Маппинг type → компонент.
@@ -21,4 +22,5 @@ export const WIDGET_COMPONENTS: Record<string, ComponentType> = {
   alerts: AlertsWidget,
   "tech-map": TechMapWidget,
   "plan-fact": PlanFactWidget,
+  "activity-timeline": ActivityTimelineWidget,
 };

@@ -14,6 +14,7 @@ export function createDefaultState(): {
     { id: "default-operations-log", type: "operations-log" },
     { id: "default-tech-map", type: "tech-map" },
     { id: "default-plan-fact", type: "plan-fact" },
+    { id: "default-activity", type: "activity-timeline" },
     { id: "default-weather-forecast", type: "weather-forecast" },
   ] as const;
 
@@ -36,7 +37,8 @@ export function createDefaultState(): {
     { i: "default-operations-log", x: 0, y: 4, w: 6, h: 3, minW: 2, maxW: 12, minH: 2 },
     { i: "default-tech-map", x: 6, y: 4, w: 3, h: 3, minW: 2, maxW: 12, minH: 2 },
     { i: "default-plan-fact", x: 9, y: 4, w: 3, h: 3, minW: 2, maxW: 12, minH: 2 },
-    { i: "default-weather-forecast", x: 0, y: 7, w: 12, h: 2, minW: 2, maxW: 12, minH: 2 },
+    { i: "default-activity", x: 0, y: 7, w: 4, h: 2, minW: 2, maxW: 12, minH: 2 },
+    { i: "default-weather-forecast", x: 4, y: 7, w: 8, h: 2, minW: 2, maxW: 12, minH: 2 },
   ];
 
   const mdLayout = [
@@ -47,7 +49,8 @@ export function createDefaultState(): {
     { i: "default-operations-log", x: 0, y: 9, w: 6, h: 3, minW: 2, maxW: 6, minH: 2 },
     { i: "default-tech-map", x: 0, y: 12, w: 6, h: 3, minW: 2, maxW: 6, minH: 2 },
     { i: "default-plan-fact", x: 0, y: 15, w: 6, h: 3, minW: 2, maxW: 6, minH: 2 },
-    { i: "default-weather-forecast", x: 0, y: 18, w: 6, h: 2, minW: 2, maxW: 6, minH: 2 },
+    { i: "default-activity", x: 0, y: 18, w: 6, h: 2, minW: 2, maxW: 6, minH: 2 },
+    { i: "default-weather-forecast", x: 0, y: 20, w: 6, h: 2, minW: 2, maxW: 6, minH: 2 },
   ];
 
   const smLayout = widgets.map((w, index) => ({

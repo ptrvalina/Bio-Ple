@@ -61,6 +61,13 @@ export const WIDGET_REGISTRY: Record<string, WidgetDefinition> = {
     description: "Отклонения по операциям",
     defaultWidth: 6,
   },
+  "activity-timeline": {
+    type: "activity-timeline",
+    title: "Лента активности",
+    icon: "RefreshCw",
+    description: "Синхронизация, поля, алерты",
+    defaultWidth: 3,
+  },
 };
 
 export const WIDGET_LIST = Object.values(WIDGET_REGISTRY);

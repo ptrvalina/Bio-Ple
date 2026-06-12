@@ -169,6 +169,8 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   },
 
   resetConfig: () => {
-    set({ ...createDefaultState(), removingIds: [] });
+    const defaults = createDefaultState();
+    set({ ...defaults, removingIds: [] });
+    saveDashboardConfig(defaults);
   },
 }));

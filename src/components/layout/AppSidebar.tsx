@@ -69,7 +69,7 @@ export function AppSidebar() {
             <button
               key={field.id}
               type="button"
-              onClick={() => selectField(field.id)}
+              onClick={() => void selectField(field.id)}
               className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition ${
                 selectedFieldId === field.id
                   ? "bg-accent/10 ring-1 ring-accent/30"

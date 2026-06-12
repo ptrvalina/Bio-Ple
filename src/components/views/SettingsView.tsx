@@ -2,6 +2,8 @@
 
 import { useState, type ReactNode } from "react";
 import { Bell, Database, Globe, Shield, User } from "lucide-react";
+import { ServiceHealthPanel } from "@/components/platform/ServiceHealthPanel";
+import { useDataStore } from "@/store/dataStore";
 import { useToastStore } from "@/store/toastStore";
 
 function Toggle({
@@ -76,6 +78,7 @@ function SettingRow({
 
 export function SettingsView() {
   const addToast = useToastStore((s) => s.addToast);
+  const fields = useDataStore((s) => s.fields);
   const [alerts, setAlerts] = useState(true);
   const [weather, setWeather] = useState(true);
   const [darkMode, setDarkMode] = useState(true);
@@ -91,9 +94,11 @@ export function SettingsView() {
             </span>
           </SettingRow>
           <SettingRow label="Хозяйство" description="ООО «БиоПоле» · 317.5 га">
-            <span className="text-sm text-accent">3 поля</span>
+            <span className="text-sm text-accent">{fields.length} полей</span>
           </SettingRow>
         </SettingSection>
+
+        <ServiceHealthPanel />
 
         <SettingSection icon={Bell} title="Уведомления">
           <SettingRow
@@ -117,9 +122,9 @@ export function SettingsView() {
         </SettingSection>
 
         <SettingSection icon={Database} title="Данные и интеграции">
-          <SettingRow label="Источник данных" description="Текущий режим работы">
-            <span className="rounded-full bg-amber-500/15 px-3 py-1 text-xs font-medium text-amber-400">
-              Mock API
+          <SettingRow label="Источник данных" description="REST API · 5 микросервисов">
+            <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-medium text-emerald-400">
+              /api/v1
             </span>
           </SettingRow>
           <SettingRow
@@ -141,7 +146,7 @@ export function SettingsView() {
 
         <SettingSection icon={Shield} title="Безопасность">
           <SettingRow label="Версия" description="BioPole AgroPulse">
-            <span className="font-mono text-sm text-slate-500">v1.0.0</span>
+            <span className="font-mono text-sm text-slate-500">v1.1.0</span>
           </SettingRow>
         </SettingSection>
       </div>

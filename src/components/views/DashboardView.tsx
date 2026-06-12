@@ -1,16 +1,19 @@
 "use client";
 
 import { DashboardKPIBar } from "@/components/dashboard/DashboardKPIBar";
-import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import { DashboardGrid } from "@/components/dashboard/DashboardGrid";
 import { MobileFieldPicker } from "@/components/mobile/MobileFieldPicker";
 
+/** Главный дашборд использует ту же раскладку, что и конструктор */
 export function DashboardView() {
   return (
-    <div className="flex-1 overflow-y-auto overscroll-contain">
-      <div className="mx-auto max-w-[1600px] space-y-4 p-3 sm:space-y-5 sm:p-5 animate-fade-in">
+    <div className="flex min-h-0 flex-1 flex-col">
+      <div className="shrink-0 space-y-4 px-3 pt-3 sm:space-y-5 sm:px-5 sm:pt-5">
         <MobileFieldPicker />
         <DashboardKPIBar />
-        <DashboardLayout />
+      </div>
+      <div className="relative min-h-0 flex-1 bg-grid-pattern bg-grid bg-surface/50">
+        <DashboardGrid mode="view" />
       </div>
     </div>
   );

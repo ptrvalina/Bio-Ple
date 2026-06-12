@@ -11,6 +11,7 @@ import {
   FileSpreadsheet,
   GitCompare,
   BarChart2,
+  RefreshCw,
   GripVertical,
   type LucideIcon,
 } from "lucide-react";
@@ -26,6 +27,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   FileSpreadsheet,
   GitCompare,
   BarChart2,
+  RefreshCw,
 };
 
 const DRAG_TYPE = "application/agropulse-widget";

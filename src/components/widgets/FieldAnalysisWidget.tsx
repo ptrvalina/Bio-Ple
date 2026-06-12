@@ -67,7 +67,7 @@ export function FieldAnalysisWidget() {
           <button
             key={f.id}
             type="button"
-            onClick={() => selectField(f.id)}
+            onClick={() => void selectField(f.id)}
             className={`rounded-md px-2 py-1 text-[10px] font-medium transition ${
               field.id === f.id
                 ? "bg-accent text-white"

@@ -19,6 +19,7 @@ export function FieldMapWidget() {
   const fields = useDataStore((s) => s.fields);
   const selectedFieldId = useDataStore((s) => s.selectedFieldId);
   const selectField = useDataStore((s) => s.selectField);
+  const openFieldDrawer = useDataStore((s) => s.openFieldDrawer);
 
   const selected = fields.find((f) => f.id === selectedFieldId);
 
@@ -85,9 +86,7 @@ export function FieldMapWidget() {
                 stroke={isSelected ? "#fff" : fill}
                 strokeWidth={isSelected ? 2.5 : 1.5}
                 className="cursor-pointer transition-all hover:fill-opacity-70"
-                onClick={() =>
-                  selectField(isSelected ? null : field.id)
-                }
+                onClick={() => void selectField(isSelected ? null : field.id)}
               />
               <text
                 x={
@@ -164,6 +163,13 @@ export function FieldMapWidget() {
               </p>
             </div>
           </div>
+          <button
+            type="button"
+            onClick={openFieldDrawer}
+            className="mt-2 w-full rounded-lg bg-accent/15 py-1.5 text-[11px] font-medium text-accent hover:bg-accent/25"
+          >
+            Карточка поля →
+          </button>
         </div>
       )}
     </div>

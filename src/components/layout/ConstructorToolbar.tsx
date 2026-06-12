@@ -17,7 +17,7 @@ export function ConstructorToolbar() {
 
   const handleSave = useCallback(() => {
     saveConfig();
-    addToast("Конфигурация сохранена", "success");
+    addToast("Раскладка сохранена — обновится на дашборде", "success");
   }, [saveConfig, addToast]);
 
   const handleReset = useCallback(() => {
@@ -29,7 +29,7 @@ export function ConstructorToolbar() {
     <>
       <div className="flex flex-col gap-2 border-b border-surface-border bg-surface-card/40 px-3 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:px-5">
         <p className="hidden text-xs text-slate-500 lg:block">
-          Перетащите виджеты из панели слева · размер кнопками 2/3/4/6
+          Раскладка общая с дашбордом · перетащите виджеты · размер 2/3/4/6 · «Сохранить» фиксирует
         </p>
         <p className="text-xs text-slate-500 lg:hidden">
           Нажмите «+» чтобы добавить виджет · перетаскивание отключено на мобильном

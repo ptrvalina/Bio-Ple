@@ -52,7 +52,7 @@ export function AlertsWidget() {
               </p>
               <button
                 type="button"
-                onClick={() => dismissAlert(alert.id)}
+                onClick={() => void dismissAlert(alert.id)}
                 className="mt-2 rounded-md bg-surface-hover px-2 py-1 text-[10px] text-slate-300 transition hover:bg-accent/20 hover:text-accent"
               >
                 Подтвердить

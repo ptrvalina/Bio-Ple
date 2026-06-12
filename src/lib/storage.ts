@@ -2,7 +2,7 @@ import type { DashboardPersistedState } from "@/types/widget";
 
 const STORAGE_KEY = "agropulse-dashboard-config";
 /** Увеличивайте при смене дефолтной раскладки */
-const STORAGE_VERSION = 3;
+const STORAGE_VERSION = 4;
 
 interface StoredConfig extends DashboardPersistedState {
   version: number;

@@ -8,8 +8,10 @@ import { ToastContainer } from "@/components/ui/ToastContainer";
 import { DashboardView } from "@/components/views/DashboardView";
 import { ConstructorView } from "@/components/views/ConstructorView";
 import { SettingsView } from "@/components/views/SettingsView";
+import { FieldDetailDrawer } from "@/components/field/FieldDetailDrawer";
 import { useDashboardStore } from "@/store/dashboardStore";
 import { useAppStore } from "@/store/appStore";
+import { useDataStore } from "@/store/dataStore";
 import type { AppView } from "@/types/data";
 
 const MOBILE_NAV: { id: AppView; icon: typeof LayoutDashboard; label: string }[] = [
@@ -38,18 +40,24 @@ function SplashScreen() {
 
 export function DashboardApp() {
   const initialize = useDashboardStore((s) => s.initialize);
-  const initialized = useDashboardStore((s) => s.initialized);
+  const dashboardReady = useDashboardStore((s) => s.initialized);
+  const bootstrap = useDataStore((s) => s.bootstrap);
+  const dataReady = useDataStore((s) => s.initialized);
+  const dataError = useDataStore((s) => s.error);
   const view = useAppStore((s) => s.view);
   const setView = useAppStore((s) => s.setView);
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
     initialize();
-    const timer = setTimeout(() => setShowSplash(false), 800);
+    void bootstrap();
+    const timer = setTimeout(() => setShowSplash(false), 900);
     return () => clearTimeout(timer);
-  }, [initialize]);
+  }, [initialize, bootstrap]);
 
-  if (!initialized || showSplash) {
+  const ready = dashboardReady && dataReady;
+
+  if (!ready || showSplash) {
     return <SplashScreen />;
   }
 
@@ -84,7 +92,14 @@ export function DashboardApp() {
         </nav>
       </div>
 
+      <FieldDetailDrawer />
       <ToastContainer />
+
+      {dataError && (
+        <div className="fixed bottom-20 left-1/2 z-50 -translate-x-1/2 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-2 text-xs text-red-300 lg:bottom-4">
+          {dataError}
+        </div>
+      )}
     </div>
   );
 }

@@ -20,7 +20,7 @@ export function MobileFieldPicker() {
             <button
               key={field.id}
               type="button"
-              onClick={() => selectField(field.id)}
+              onClick={() => void selectField(field.id)}
               className={`flex shrink-0 items-center gap-2 rounded-xl border px-3 py-2 transition ${
                 active
                   ? "border-accent/50 bg-accent/10"

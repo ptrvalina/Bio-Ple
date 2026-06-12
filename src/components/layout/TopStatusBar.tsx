@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bell, Download, Search, Wifi } from "lucide-react";
+import { Bell, Download, RefreshCw, Search, Wifi } from "lucide-react";
 import { useAppStore } from "@/store/appStore";
 import { useDashboardStore } from "@/store/dashboardStore";
 import { useDataStore } from "@/store/dataStore";
@@ -24,8 +24,16 @@ export function TopStatusBar() {
   const layouts = useDashboardStore((s) => s.layouts);
   const alerts = useDataStore((s) => s.alerts);
   const dataState = useDataStore();
+  const isSyncing = useDataStore((s) => s.isSyncing);
+  const lastSyncAt = useDataStore((s) => s.lastSyncAt);
+  const serviceHealth = useDataStore((s) => s.serviceHealth);
+  const refreshAll = useDataStore((s) => s.refreshAll);
   const addToast = useToastStore((s) => s.addToast);
   const now = useLiveClock();
+
+  const onlineServices = serviceHealth.filter((s) => s.status === "online").length;
+  const allOnline =
+    serviceHealth.length > 0 && onlineServices === serviceHealth.length;
 
   const titles: Record<string, string> = {
     dashboard: "Дашборд",
@@ -84,10 +92,33 @@ export function TopStatusBar() {
             />
           </div>
 
-          <div className="hidden items-center gap-1.5 rounded-lg bg-accent/10 px-2 py-1 text-[10px] font-medium text-accent md:flex">
-            <Wifi className="h-3 w-3" />
-            Онлайн
-          </div>
+          <button
+            type="button"
+            onClick={() => {
+              void refreshAll();
+              addToast("Синхронизация с микросервисами...", "info");
+            }}
+            disabled={isSyncing}
+            title={
+              lastSyncAt
+                ? `Последняя синхронизация: ${new Date(lastSyncAt).toLocaleTimeString("ru-RU")}`
+                : "Синхронизировать"
+            }
+            className={`hidden items-center gap-1.5 rounded-lg px-2 py-1 text-[10px] font-medium md:flex ${
+              allOnline
+                ? "bg-accent/10 text-accent"
+                : "bg-amber-500/10 text-amber-400"
+            } disabled:opacity-60`}
+          >
+            {isSyncing ? (
+              <RefreshCw className="h-3 w-3 animate-spin" />
+            ) : (
+              <Wifi className="h-3 w-3" />
+            )}
+            {serviceHealth.length > 0
+              ? `${onlineServices}/${serviceHealth.length} online`
+              : "Синхр."}
+          </button>
 
           <button
             type="button"
